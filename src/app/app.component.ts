@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { ADAI_AUSDC_AUSDT_ADDRESS } from '../constants/contractAddresses';
-import strategy1ABI from '../constants/strategy1ABI.json';
+import { IB3CRV } from '../constants/contractAddresses';
+import ib3CRV from '../constants/ib3CRV.json';
 
 let Web3: any;
 @Component({
@@ -11,8 +11,12 @@ let Web3: any;
 export class AppComponent {
   title = 'ayf-management-dashboard';
   web3: any;
-  fund1Contract: any;
+  ib3CRV: any;
+  ib3CRVHolder: string;
+  ib3CRVBalance: any;
   constructor() {
+    this.ib3CRVHolder = '0x661bf31c780c37764f27f28b195f2b7e973c3c01';
+    this.ib3CRVBalance = 0
     if (!window['Web3']) {
       this.injectScript();
     } else {
@@ -46,12 +50,11 @@ export class AppComponent {
     console.error('web3 error injected');
   }
   async initContract() {
-    this.fund1Contract = new this.web3.eth.Contract(
-      strategy1ABI,
-      ADAI_AUSDC_AUSDT_ADDRESS
+    this.ib3CRV = new this.web3.eth.Contract(
+      ib3CRV,
+      IB3CRV
     )
-    const balance = await this.fund1Contract.methods.balanceOf('0x77cf32ed6667a1f9747f4c0a553c53f2745f96cc').call();
-    console.log(this.web3.utils.fromWei(balance));
-    console.log(balance);
+    const balanceInWei = await this.ib3CRV.methods.balanceOf(this.ib3CRVHolder).call();
+    this.ib3CRVBalance = this.web3.utils.fromWei(balanceInWei);
   }
 }
