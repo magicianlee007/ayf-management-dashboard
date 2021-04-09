@@ -1,2 +1,8 @@
 export const IB3CRV  = "0x5282a4eF67D9C33135340fB3289cc1711c13638C";
 
+export const FarmTreasury_USDC = '0x067b9FE006E16f52BBf647aB6799f87566480D2c';
+export const FarmBoss_USDC = '0xfB2Ccc29e312554bc264cB83497A7137c1532e2f';
+export const FarmTreasury_ETH = '0x70e51DFc7A9FC391995C2B2f027BC49D4fe01577';
+export const FarmBoss_ETH = '0x7B4a6b798f803512fc53ed656fBc510F022389E5';
+export const FarmTreasury_WBTC = '0x17E9ed51feD2F190D50f5bd4f1a8C9CbCd36162A';
+export const FarmBoss_WBTC = '0xCbAb999b25850c6530bcA365e5005702CB6Bf006';
