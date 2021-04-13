@@ -1,6 +1,7 @@
 .wrapper {
   width: 100vw;
-  height: 100vh;
+  max-height: 100%;
+  overflow-y: auto;
   background: #5a32e4;
   position: fixed;
   padding: 16px;
