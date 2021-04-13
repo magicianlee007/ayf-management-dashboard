@@ -1,8 +1,20 @@
+<div class="wrapper">
+  <h1>Active Yield Fund Monitoring</h1>
 
-<h1> Active Yield Fund Monitoring</h1>
-
-<h2>FarmBossUSDC</h2>
-<h2>USDC Balance: {{ fbUSDC_Balance.usdc }} </h2>
-<h2>IdleUSDC Balance: {{ fbUSDC_Balance.idle_USDC }} </h2>
-<h2>ib3CRV-gauge Balance: {{ fbUSDC_Balance.ib3CRV_Gauge }} </h2>
+  <div class="card">
+    <h2>FarmBossUSDC</h2>
+    <a
+      href="https://etherscan.io/address/0xfB2Ccc29e312554bc264cB83497A7137c1532e2f"
+      target="_blank"
+    >
+      <h3>0xfB2Ccc29e312554bc264cB83497A7137c1532e2f</h3>
+    </a>
+    <h4>USDC Balance:</h4>
+    <h3>{{ fbUSDC_Balance.usdc }}</h3>
+    <h4>IdleUSDC Balance:</h4>
+    <h3>{{ fbUSDC_Balance.idle_USDC }}</h3>
+    <h4>ib3CRV-gauge Balance:</h4>
+    <h3>{{ fbUSDC_Balance.ib3CRV_Gauge }}</h3>
+  </div>
+</div>
 <router-outlet></router-outlet>
