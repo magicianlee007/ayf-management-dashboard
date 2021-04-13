@@ -5,20 +5,24 @@
   position: fixed;
   padding: 16px;
 
-  .card {
-    width: 420px;
-    padding: 8px;
-    border: 1px solid #0e1117;
-    border-radius: 10px;
-    background-color: #0e1117;
+  .cards {
     display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    box-shadow: 1px 1px 8px #333;
-    a {
-      text-decoration: none;
-      h3 {
-        color: #6e8ce4;
+    .card {
+      width: 420px;
+      margin-right: 20px;
+      padding: 8px;
+      border: 1px solid #0e1117;
+      border-radius: 10px;
+      background-color: #0e1117;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      box-shadow: 1px 1px 8px #333;
+      a {
+        text-decoration: none;
+        h3 {
+          color: #6e8ce4;
+        }
       }
     }
   }

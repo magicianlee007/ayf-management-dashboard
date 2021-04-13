@@ -4,10 +4,15 @@ import {
   IDLE_USDC,
   USDC,
   FarmBoss_USDC,
+  IBETH,
+  WETH,
+  ECRV_GAUGE,
+  FarmBoss_ETH,
 } from '../constants/contractAddresses';
 import ib3CRV_GAUGE from '../constants/ib3CRV_GAUGE.json';
 import idle_USDC from '../constants/idle_USDC.json';
 import usdc from '../constants/usdc.json';
+import balanceABI from '../constants/BalanceOfABI.json';
 
 let Web3: any;
 
@@ -19,10 +24,18 @@ let Web3: any;
 export class AppComponent {
   title = 'ayf-management-dashboard';
   web3: any;
+  // usdc reward token contract
   ib3CRV_GAUGE: any;
   idle_USDC: any;
   usdc: any;
+
+  // eth reward token contract
+  ibETH: any;
+  wETH: any;
+  eCRV_GAUGE: any;
+
   fbUSDC_Balance = { usdc: '0', ib3CRV_Gauge: '0', idle_USDC: '0' };
+  fbETH_Balance = { wETH: '0', eCRV_Gauge: '0', ibETH: '0' };
 
   constructor() {
     if (!window['Web3']) {
@@ -72,18 +85,41 @@ export class AppComponent {
     const usdcBalanceWei = await this.usdc.methods
       .balanceOf(FarmBoss_USDC)
       .call();
-    const usdcDecimals = await this.usdc.methods.decimals().call();
-    console.log(usdcBalanceWei);
+    // const usdcDecimals = await this.usdc.methods.decimals().call();
     this.fbUSDC_Balance.usdc = this.web3.utils.fromWei(usdcBalanceWei, 'mwei');
+
     const idleUSDCBalanceWei = await this.idle_USDC.methods
       .balanceOf(FarmBoss_USDC)
       .call();
     this.fbUSDC_Balance.idle_USDC = this.web3.utils.fromWei(idleUSDCBalanceWei);
+
     const ib3CRV_GaugeBalanceWei = await this.ib3CRV_GAUGE.methods
       .balanceOf(FarmBoss_USDC)
       .call();
     this.fbUSDC_Balance.ib3CRV_Gauge = this.web3.utils.fromWei(
       ib3CRV_GaugeBalanceWei
     );
+
+    // Get the balance of FarmBoss_ETH
+    this.ibETH = new this.web3.eth.Contract(balanceABI, IBETH);
+    const ibEthBalanceWei = await this.ibETH.methods
+      .balanceOf(FarmBoss_ETH)
+      .call();
+    this.fbETH_Balance.ibETH = this.web3.utils.fromWei(ibEthBalanceWei);
+
+    this.wETH = new this.web3.eth.Contract(balanceABI, WETH);
+    const wEthBalanceWei = await this.wETH.methods
+      .balanceOf(FarmBoss_ETH)
+      .call();
+    this.fbETH_Balance.wETH = this.web3.utils.fromWei(wEthBalanceWei);
+
+    this.eCRV_GAUGE = new this.web3.eth.Contract(balanceABI, ECRV_GAUGE);
+    const eCrvGaugeBalanceWei = await this.eCRV_GAUGE.methods
+      .balanceOf(FarmBoss_ETH)
+      .call();
+    this.fbETH_Balance.eCRV_Gauge = this.web3.utils.fromWei(
+      eCrvGaugeBalanceWei
+    );
+    console.log(this.fbETH_Balance);
   }
 }
