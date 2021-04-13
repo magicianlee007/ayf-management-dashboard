@@ -7,10 +7,16 @@
 
   .cards {
     display: flex;
-    .treasury_card {
-      background-color: #29210b;
-    }
+    margin-bottom: 20px;
     .card {
+      &.treasury_card {
+        // background-color: #29210b;
+        h2,
+        h3,
+        h4 {
+          color: #dccb4d;
+        }
+      }
       width: 440px;
       margin-right: 20px;
       padding: 8px;

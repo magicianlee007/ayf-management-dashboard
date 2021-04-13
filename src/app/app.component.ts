@@ -12,6 +12,9 @@ import {
   COMPOUND_WBTC,
   STACK_ETH,
   FarmBoss_WBTC,
+  FarmTreasury_USDC,
+  FarmTreasury_ETH,
+  FarmTreasury_WBTC,
 } from '../constants/contractAddresses';
 import ib3CRV_GAUGE from '../constants/ib3CRV_GAUGE.json';
 import idle_USDC from '../constants/idle_USDC.json';
@@ -46,6 +49,10 @@ export class AppComponent {
   fbUSDC_Balance = { usdc: '0', ib3CRV_Gauge: '0', idle_USDC: '0' };
   fbETH_Balance = { wETH: '0', eCRV_Gauge: '0', ibETH: '0' };
   fbWBTC_Balance = { wBTC: '0', compound_WBTC: '0', stack_ETH: '0' };
+
+  ftUSDC_Balance = '0';
+  ftWETH_Balance = '0';
+  ftWBTC_Balance = '0';
 
   constructor() {
     if (!window['Web3']) {
@@ -154,6 +161,24 @@ export class AppComponent {
       .call();
     this.fbWBTC_Balance.stack_ETH = this.web3.utils.fromWei(stackETHBalanceWei);
 
-    console.log(this.fbWBTC_Balance);
+    // Get the FarmTreasuryUSDC's USDC balance
+    const ftUSDCBalanceWei = await this.usdc.methods
+      .balanceOf(FarmTreasury_USDC)
+      .call();
+    this.ftUSDC_Balance = this.web3.utils.fromWei(ftUSDCBalanceWei, 'mwei');
+
+    // Get the FarmTreasuryETH's WETH balance
+    const ftETHBalanceWei = await this.wETH.methods
+      .balanceOf(FarmTreasury_ETH)
+      .call();
+    this.ftWETH_Balance = this.web3.utils.fromWei(ftETHBalanceWei);
+
+    // Get the FarmTreasuryWBTC's WBTC balance
+    const ftWBTCBalanceWei = await this.wBTC.methods
+      .balanceOf(FarmTreasury_WBTC)
+      .call();
+    this.ftWBTC_Balance = (
+      this.web3.utils.fromWei(ftWBTCBalanceWei, 'gwei') * 10
+    ).toString();
   }
 }
