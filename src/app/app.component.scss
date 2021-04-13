@@ -7,8 +7,11 @@
 
   .cards {
     display: flex;
+    .treasury_card {
+      background-color: #29210b;
+    }
     .card {
-      width: 420px;
+      width: 440px;
       margin-right: 20px;
       padding: 8px;
       border: 1px solid #0e1117;
@@ -20,6 +23,7 @@
       box-shadow: 1px 1px 8px #333;
       a {
         text-decoration: none;
+        text-align: center;
         h3 {
           color: #6e8ce4;
         }
