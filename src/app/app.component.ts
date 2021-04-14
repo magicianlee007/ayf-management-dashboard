@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import {
   IB3CRV_GAUGE,
   IDLE_USDC,
@@ -23,7 +24,10 @@ import balanceABI from '../constants/BalanceOfABI.json';
 import farmTreasury from '../constants/FarmTreasury.json';
 
 let Web3: any;
-
+const ETH_PRICE_URL =
+  'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd';
+const WBTC_PRICE_URL =
+  'https://api.coingecko.com/api/v3/simple/price?ids=wrapped-bitcoin&vs_currencies=usd';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -52,20 +56,34 @@ export class AppComponent {
   farmTreasuryETH: any;
   farmTreasuryWBTC: any;
 
-  fbUSDC_Balance = { usdc: '0', ib3CRV_Gauge: '0', idle_USDC: '0' };
-  fbETH_Balance = { wETH: '0', eCRV_Gauge: '0', ibETH: '0' };
-  fbWBTC_Balance = { wBTC: '0', compound_WBTC: '0', stack_ETH: '0' };
+  // coin price
+  ethPrice = 0;
+  wBTCPrice = 0;
+  usdcPrice = 1;
+  // Balance
+
+  fbUSDC_Balance = { usdc: 0, ib3CRV_Gauge: 0, idle_USDC: 0, totalValue: 0 };
+  fbETH_Balance = { wETH: 0, eCRV_Gauge: 0, ibETH: 0, totalValue: 0 };
+  fbWBTC_Balance = { wBTC: 0, compound_WBTC: 0, stack_ETH: 0, totalValue: 0 };
 
   ftUSDC_Balance = { usdc: '0', aum: '0' };
   ftWETH_Balance = { wETH: '0', aum: '0' };
   ftWBTC_Balance = { wBTC: '0', aum: '0' };
 
-  constructor() {
+  constructor(private http: HttpClient) {
     if (!window['Web3']) {
       this.injectScript();
     } else {
       this.generateProvider();
     }
+  }
+  ngOnInit() {
+    this.http.get(ETH_PRICE_URL).subscribe((res) => {
+      this.ethPrice = res['ethereum']['usd'];
+    });
+    this.http.get(WBTC_PRICE_URL).subscribe((res) => {
+      this.wBTCPrice = res['wrapped-bitcoin']['usd'];
+    });
   }
   injectScript() {
     const script = document.createElement('script');
@@ -123,6 +141,11 @@ export class AppComponent {
       ib3CRV_GaugeBalanceWei
     );
 
+    this.fbUSDC_Balance.totalValue =
+      this.fbUSDC_Balance.usdc * this.usdcPrice +
+      this.fbUSDC_Balance.idle_USDC * this.usdcPrice +
+      this.fbUSDC_Balance.ib3CRV_Gauge * this.usdcPrice;
+
     // Get the balance of FarmBoss_ETH
     this.ibETH = new this.web3.eth.Contract(balanceABI, IBETH);
     const ibEthBalanceWei = await this.ibETH.methods
@@ -144,28 +167,36 @@ export class AppComponent {
       eCrvGaugeBalanceWei
     );
 
+    this.fbETH_Balance.totalValue =
+      this.fbETH_Balance.ibETH * this.ethPrice +
+      this.fbETH_Balance.eCRV_Gauge * this.ethPrice +
+      this.fbETH_Balance.wETH * this.ethPrice;
+
     // Get the balance of the FarmBossWBTC
     this.wBTC = new this.web3.eth.Contract(balanceABI, WBTC);
     const wBTCBalanceWei = await this.wBTC.methods
       .balanceOf(FarmBoss_WBTC)
       .call();
-    this.fbWBTC_Balance.wBTC = (
-      this.web3.utils.fromWei(wBTCBalanceWei, 'gwei') * 10
-    ).toString();
+    this.fbWBTC_Balance.wBTC =
+      this.web3.utils.fromWei(wBTCBalanceWei, 'gwei') * 10;
 
     this.compound_BTC = new this.web3.eth.Contract(balanceABI, COMPOUND_WBTC);
     const compoundWBTCBalanceWei = await this.compound_BTC.methods
       .balanceOf(FarmBoss_WBTC)
       .call();
-    this.fbWBTC_Balance.compound_WBTC = (
-      this.web3.utils.fromWei(compoundWBTCBalanceWei, 'gwei') * 10
-    ).toString();
+    this.fbWBTC_Balance.compound_WBTC =
+      this.web3.utils.fromWei(compoundWBTCBalanceWei, 'gwei') * 10;
 
     this.stack_ETH = new this.web3.eth.Contract(balanceABI, STACK_ETH);
     const stackETHBalanceWei = await this.stack_ETH.methods
       .balanceOf(FarmBoss_WBTC)
       .call();
     this.fbWBTC_Balance.stack_ETH = this.web3.utils.fromWei(stackETHBalanceWei);
+
+    this.fbWBTC_Balance.totalValue =
+      this.fbWBTC_Balance.stack_ETH * this.ethPrice +
+      (this.fbWBTC_Balance.compound_WBTC + this.fbWBTC_Balance.wBTC) *
+        this.wBTCPrice;
 
     // Get the FarmTreasuryUSDC's USDC balance
     const ftUSDCBalanceWei = await this.usdc.methods
