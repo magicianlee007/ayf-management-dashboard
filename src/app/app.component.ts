@@ -25,7 +25,7 @@ import farmTreasury from '../constants/FarmTreasury.json';
 
 let Web3: any;
 const COIN_PRICE_URL =
-  'https://api.coingecko.com/api/v3/simple/price?ids=ethereum,wrapped-bitcoin,compound-wrapped-btc&vs_currencies=usd';
+  'https://api.coingecko.com/api/v3/simple/price?ids=ethereum,wrapped-bitcoin,compound-wrapped-btc,interest-bearing-eth&vs_currencies=usd';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -59,6 +59,7 @@ export class AppComponent {
   wBTCPrice = 0;
   usdcPrice = 1;
   compoundBTCPrice = 0;
+  ibETHPrice = 0;
   // Balance
 
   fbUSDC_Balance = { usdc: 0, ib3CRV_Gauge: 0, idle_USDC: 0, totalValue: 0 };
@@ -81,6 +82,7 @@ export class AppComponent {
       this.ethPrice = res['ethereum']['usd'];
       this.wBTCPrice = res['wrapped-bitcoin']['usd'];
       this.compoundBTCPrice = res['compound-wrapped-btc']['usd'];
+      this.ibETHPrice = res['interest-bearing-eth']['usd'];
     });
   }
   injectScript() {
@@ -166,7 +168,7 @@ export class AppComponent {
     );
 
     this.fbETH_Balance.totalValue =
-      this.fbETH_Balance.ibETH * this.ethPrice +
+      this.fbETH_Balance.ibETH * this.ibETHPrice +
       this.fbETH_Balance.eCRV_Gauge * this.ethPrice +
       this.fbETH_Balance.wETH * this.ethPrice;
 
