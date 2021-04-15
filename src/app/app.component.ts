@@ -24,10 +24,8 @@ import balanceABI from '../constants/BalanceOfABI.json';
 import farmTreasury from '../constants/FarmTreasury.json';
 
 let Web3: any;
-const ETH_PRICE_URL =
-  'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd';
-const WBTC_PRICE_URL =
-  'https://api.coingecko.com/api/v3/simple/price?ids=wrapped-bitcoin&vs_currencies=usd';
+const COIN_PRICE_URL =
+  'https://api.coingecko.com/api/v3/simple/price?ids=ethereum,wrapped-bitcoin,compound-wrapped-btc&vs_currencies=usd';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -60,6 +58,7 @@ export class AppComponent {
   ethPrice = 0;
   wBTCPrice = 0;
   usdcPrice = 1;
+  compoundBTCPrice = 0;
   // Balance
 
   fbUSDC_Balance = { usdc: 0, ib3CRV_Gauge: 0, idle_USDC: 0, totalValue: 0 };
@@ -78,11 +77,10 @@ export class AppComponent {
     }
   }
   ngOnInit() {
-    this.http.get(ETH_PRICE_URL).subscribe((res) => {
+    this.http.get(COIN_PRICE_URL).subscribe((res) => {
       this.ethPrice = res['ethereum']['usd'];
-    });
-    this.http.get(WBTC_PRICE_URL).subscribe((res) => {
       this.wBTCPrice = res['wrapped-bitcoin']['usd'];
+      this.compoundBTCPrice = res['compound-wrapped-btc']['usd'];
     });
   }
   injectScript() {
@@ -195,8 +193,8 @@ export class AppComponent {
 
     this.fbWBTC_Balance.totalValue =
       this.fbWBTC_Balance.stack_ETH * this.ethPrice +
-      (this.fbWBTC_Balance.compound_WBTC + this.fbWBTC_Balance.wBTC) *
-        this.wBTCPrice;
+      this.fbWBTC_Balance.compound_WBTC * this.compoundBTCPrice +
+      this.fbWBTC_Balance.wBTC * this.wBTCPrice;
 
     // Get the FarmTreasuryUSDC's USDC balance
     const ftUSDCBalanceWei = await this.usdc.methods
