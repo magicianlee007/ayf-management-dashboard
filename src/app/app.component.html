@@ -10,14 +10,22 @@
       >
         <h3>0xfB2Ccc29e312554bc264cB83497A7137c1532e2f</h3>
       </a>
-      <h4>USDC Balance:</h4>
-      <h3>{{ fbUSDC_Balance.usdc }}</h3>
-      <h4>IdleUSDC Balance:</h4>
-      <h3>{{ fbUSDC_Balance.idle_USDC }}</h3>
-      <h4>ib3CRV-gauge Balance:</h4>
-      <h3>{{ fbUSDC_Balance.ib3CRV_Gauge }}</h3>
-      <h4>Total Value:</h4>
-      <h2>{{ fbUSDC_Balance.totalValue.toLocaleString() }} USD</h2>
+      <div class="item">
+        <h4>USDC Balance:</h4>
+        <h3 class="right">{{ fbUSDC_Balance.usdc }}</h3>
+      </div>
+      <div class="item">
+        <h4>IdleUSDC Balance:</h4>
+        <h3 class="right">{{ fbUSDC_Balance.idle_USDC }}</h3>
+      </div>
+      <div class="item">
+        <h4>ib3CRV-gauge Balance:</h4>
+        <h3 class="right">{{ fbUSDC_Balance.ib3CRV_Gauge }}</h3>
+      </div>
+      <div class="item">
+        <h4>Total Value:</h4>
+        <h2 class="right">{{ fbUSDC_Balance.totalValue.toLocaleString() }} USD</h2>
+      </div>
     </div>
 
     <div class="card">
@@ -28,14 +36,24 @@
       >
         <h3>0x7B4a6b798f803512fc53ed656fBc510F022389E5</h3>
       </a>
-      <h4>WETH Balance:</h4>
-      <h3>{{ fbETH_Balance.wETH }}</h3>
-      <h4>IBETH Balance:</h4>
-      <h3>{{ fbETH_Balance.ibETH }}</h3>
-      <h4>eCRV-gauge Balance:</h4>
-      <h3>{{ fbETH_Balance.eCRV_Gauge }}</h3>
-      <h4>Total Value:</h4>
-      <h2>{{ fbETH_Balance.totalValue.toLocaleString() }} USD</h2>
+      <div class="item">
+        <h4>WETH Balance:</h4>
+        <h3 class="right">{{ fbETH_Balance.wETH }}</h3>
+      </div>
+      <div class="item">
+        <h4>IBETH Balance:</h4>
+        <h3 class="right">{{ fbETH_Balance.ibETH }}</h3>
+      </div>
+      <div class="item">
+        <h4>eCRV-gauge Balance:</h4>
+        <h3 class="right">{{ fbETH_Balance.eCRV_Gauge }}</h3>
+      </div>
+      <div class="item">
+        <h4>Total Value:</h4>
+        <h2 class="right">
+          {{ fbETH_Balance.totalValue.toLocaleString() }} USD
+        </h2>
+      </div>
     </div>
 
     <div class="card">
@@ -46,14 +64,18 @@
       >
         <h3>0xCbAb999b25850c6530bcA365e5005702CB6Bf006</h3>
       </a>
+      <div class="item">
       <h4>WBTC Balance:</h4>
-      <h3>{{ fbWBTC_Balance.wBTC }}</h3>
+      <h3 class="right">{{ fbWBTC_Balance.wBTC }}</h3></div>
+      <div class="item">
       <h4>Compound WBTC Balance:</h4>
-      <h3>{{ fbWBTC_Balance.compound_WBTC }}</h3>
+      <h3 class="right">{{ fbWBTC_Balance.compound_WBTC }}</h3></div>
+      <div class="item">
       <h4>stackETH Balance:</h4>
-      <h3>{{ fbWBTC_Balance.stack_ETH }}</h3>
+      <h3 class="right">{{ fbWBTC_Balance.stack_ETH }}</h3></div>
+      <div class="item">
       <h4>Total Value:</h4>
-      <h2>{{ fbWBTC_Balance.totalValue.toLocaleString() }} USD</h2>
+      <h2 class="right">{{ fbWBTC_Balance.totalValue.toLocaleString() }} USD</h2></div>
     </div>
   </div>
 
@@ -66,10 +88,14 @@
       >
         <h3>0x067b9FE006E16f52BBf647aB6799f87566480D2c</h3>
       </a>
+      <div class="item">
       <h4>USDC Balance:</h4>
-      <h3>{{ ftUSDC_Balance.usdc }}</h3>
+      <h3 class="right">{{ ftUSDC_Balance.usdc }}</h3>
+      </div>
+      <div class="item">
       <h4>AUM Balance:</h4>
-      <h3>{{ ftUSDC_Balance.aum }}</h3>
+      <h3 class="right">{{ ftUSDC_Balance.aum }}</h3>
+      </div>
     </div>
     <div class="treasury_card card">
       <h2>FarmTreasuryETH</h2>
@@ -79,10 +105,14 @@
       >
         <h3>0x70e51DFc7A9FC391995C2B2f027BC49D4fe01577</h3>
       </a>
+      <div class="item">
       <h4>WETH Balance:</h4>
-      <h3>{{ ftWETH_Balance.wETH }}</h3>
+      <h3 class="right">{{ ftWETH_Balance.wETH }}</h3>
+      </div>
+      <div class="item">
       <h4>AUM Balance:</h4>
-      <h3>{{ ftWETH_Balance.aum }}</h3>
+      <h3 class="right">{{ ftWETH_Balance.aum }}</h3>
+      </div>
     </div>
     <div class="treasury_card card">
       <h2>FarmTreasuryWBTC</h2>
@@ -92,10 +122,14 @@
       >
         <h3>0x17E9ed51feD2F190D50f5bd4f1a8C9CbCd36162A</h3>
       </a>
+      <div class="item">
       <h4>WBTC Balance:</h4>
-      <h3>{{ ftWBTC_Balance.wBTC }}</h3>
+      <h3 class="right">{{ ftWBTC_Balance.wBTC }}</h3>
+      </div>
+      <div class="item">
       <h4>AUM Balance:</h4>
-      <h3>{{ ftWBTC_Balance.aum }}</h3>
+      <h3 class="right">{{ ftWBTC_Balance.aum }}</h3>
+      </div>
     </div>
   </div>
 </div>

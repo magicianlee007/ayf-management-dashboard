@@ -28,6 +28,14 @@
       flex-direction: column;
       box-sizing: border-box;
       box-shadow: 1px 1px 8px #333;
+      .item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .right {
+        margin-left: auto;
+      }
       a {
         text-decoration: none;
         text-align: center;
