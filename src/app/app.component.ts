@@ -65,9 +65,9 @@ export class AppComponent {
   fbETH_Balance = { wETH: 0, eCRV_Gauge: 0, ibETH: 0, totalValue: 0 };
   fbWBTC_Balance = { wBTC: 0, compound_WBTC: 0, stack_ETH: 0, totalValue: 0 };
 
-  ftUSDC_Balance = { usdc: '0', aum: '0' };
-  ftWETH_Balance = { wETH: '0', aum: '0' };
-  ftWBTC_Balance = { wBTC: '0', aum: '0' };
+  ftUSDC_Balance = { usdc: 0, aum: 0 };
+  ftWETH_Balance = { wETH: 0, aum: 0 };
+  ftWBTC_Balance = { wBTC: 0, aum: 0 };
 
   constructor(private http: HttpClient) {
     if (!window['Web3']) {
@@ -200,9 +200,8 @@ export class AppComponent {
     const ftUSDCBalanceWei = await this.usdc.methods
       .balanceOf(FarmTreasury_USDC)
       .call();
-    this.ftUSDC_Balance.usdc = this.web3.utils.fromWei(
-      ftUSDCBalanceWei,
-      'mwei'
+    this.ftUSDC_Balance.usdc = parseFloat(
+      this.web3.utils.fromWei(ftUSDCBalanceWei, 'mwei')
     );
 
     this.farmTreasuryUSDC = new this.web3.eth.Contract(
@@ -212,16 +211,17 @@ export class AppComponent {
     const ftUSDCAUMBalanceWei = await this.farmTreasuryUSDC.methods
       .totalUnderlying()
       .call();
-    this.ftUSDC_Balance.aum = this.web3.utils.fromWei(
-      ftUSDCAUMBalanceWei,
-      'mwei'
+    this.ftUSDC_Balance.aum = parseFloat(
+      this.web3.utils.fromWei(ftUSDCAUMBalanceWei, 'mwei')
     );
 
     // Get the FarmTreasuryETH's WETH balance
     const ftETHBalanceWei = await this.wETH.methods
       .balanceOf(FarmTreasury_ETH)
       .call();
-    this.ftWETH_Balance.wETH = this.web3.utils.fromWei(ftETHBalanceWei);
+    this.ftWETH_Balance.wETH = parseFloat(
+      this.web3.utils.fromWei(ftETHBalanceWei)
+    );
 
     this.farmTreasuryETH = new this.web3.eth.Contract(
       farmTreasury,
@@ -230,15 +230,16 @@ export class AppComponent {
     const ftETHAUMBalanceWei = await this.farmTreasuryETH.methods
       .totalUnderlying()
       .call();
-    this.ftWETH_Balance.aum = this.web3.utils.fromWei(ftETHAUMBalanceWei);
+    this.ftWETH_Balance.aum = parseFloat(
+      this.web3.utils.fromWei(ftETHAUMBalanceWei)
+    );
 
     // Get the FarmTreasuryWBTC's WBTC balance
     const ftWBTCBalanceWei = await this.wBTC.methods
       .balanceOf(FarmTreasury_WBTC)
       .call();
-    this.ftWBTC_Balance.wBTC = (
-      this.web3.utils.fromWei(ftWBTCBalanceWei, 'gwei') * 10
-    ).toString();
+    this.ftWBTC_Balance.wBTC =
+      this.web3.utils.fromWei(ftWBTCBalanceWei, 'gwei') * 10;
     this.farmTreasuryWBTC = new this.web3.eth.Contract(
       farmTreasury,
       FarmTreasury_WBTC
@@ -246,8 +247,7 @@ export class AppComponent {
     const ftWBTCAUMBalanceWei = await this.farmTreasuryWBTC.methods
       .totalUnderlying()
       .call();
-    this.ftWBTC_Balance.aum = (
-      this.web3.utils.fromWei(ftWBTCAUMBalanceWei, 'gwei') * 10
-    ).toString();
+    this.ftWBTC_Balance.aum =
+      this.web3.utils.fromWei(ftWBTCAUMBalanceWei, 'gwei') * 10;
   }
 }

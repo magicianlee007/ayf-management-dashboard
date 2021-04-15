@@ -101,6 +101,10 @@
         <h3 class="right">{{ ftUSDC_Balance.usdc }}</h3>
       </div>
       <div class="item">
+        <h3 class="right" *ngIf="ftUSDC_Balance.aum > 0">{{ ( ftUSDC_Balance.usdc / ftUSDC_Balance.aum ) * 100  }}%</h3>
+        <h3 class="right" *ngIf="ftUSDC_Balance.aum === 0">0 %</h3>
+      </div>
+      <div class="item">
         <h4>AUM Balance:</h4>
         <h3 class="right">{{ ftUSDC_Balance.aum }}</h3>
       </div>
@@ -118,6 +122,10 @@
         <h3 class="right">{{ ftWETH_Balance.wETH }}</h3>
       </div>
       <div class="item">
+        <h3 class="right" *ngIf="ftWETH_Balance.aum > 0">{{ ( ftWETH_Balance.wETH / ftWETH_Balance.aum ) * 100  }}%</h3>
+        <h3 class="right" *ngIf="ftWETH_Balance.aum === 0">0 %</h3>
+      </div>
+      <div class="item">
         <h4>AUM Balance:</h4>
         <h3 class="right">{{ ftWETH_Balance.aum }}</h3>
       </div>
@@ -133,6 +141,10 @@
       <div class="item">
         <h4>WBTC Balance:</h4>
         <h3 class="right">{{ ftWBTC_Balance.wBTC }}</h3>
+      </div>
+      <div class="item">
+        <h3 class="right" *ngIf="ftWBTC_Balance.aum > 0">{{ ( ftWBTC_Balance.wBTC / ftWBTC_Balance.aum ) * 100  }}%</h3>
+        <h3 class="right" *ngIf="ftWBTC_Balance.aum === 0">0 %</h3>
       </div>
       <div class="item">
         <h4>AUM Balance:</h4>
