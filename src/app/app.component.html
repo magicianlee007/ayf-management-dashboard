@@ -15,8 +15,18 @@
         <h3 class="right">{{ fbUSDC_Balance.usdc }}</h3>
       </div>
       <div class="item">
+        <h4>IDLE Strategy:</h4>
+        <h3 class="right" *ngIf="fbUSDC_Balance.totalValue > 0">{{ (fbUSDC_Balance.idle_USDC / fbUSDC_Balance.totalValue) * 100 }}%</h3>
+        <h3 class="right" *ngIf="fbUSDC_Balance.totalValue === 0">0%</h3>
+      </div>
+      <div class="item">
         <h4>IdleUSDC Balance:</h4>
         <h3 class="right">{{ fbUSDC_Balance.idle_USDC }}</h3>
+      </div>
+      <div class="item">
+        <h4>CurveFinance Strategy:</h4>
+        <h3 class="right" *ngIf="fbUSDC_Balance.totalValue > 0">{{ (fbUSDC_Balance.ib3CRV_Gauge / fbUSDC_Balance.totalValue) * 100 }}%</h3>
+        <h3 class="right" *ngIf="fbUSDC_Balance.totalValue === 0">0%</h3>
       </div>
       <div class="item">
         <h4>ib3CRV-gauge Balance:</h4>
@@ -102,7 +112,7 @@
       </div>
       <div class="item">
         <h3 class="right" *ngIf="ftUSDC_Balance.aum > 0">{{ ( ftUSDC_Balance.usdc / ftUSDC_Balance.aum ) * 100  }}%</h3>
-        <h3 class="right" *ngIf="ftUSDC_Balance.aum === 0">0 %</h3>
+        <h3 class="right" *ngIf="ftUSDC_Balance.aum === 0">0%</h3>
       </div>
       <div class="item">
         <h4>AUM Balance:</h4>
@@ -144,7 +154,7 @@
       </div>
       <div class="item">
         <h3 class="right" *ngIf="ftWBTC_Balance.aum > 0">{{ ( ftWBTC_Balance.wBTC / ftWBTC_Balance.aum ) * 100  }}%</h3>
-        <h3 class="right" *ngIf="ftWBTC_Balance.aum === 0">0 %</h3>
+        <h3 class="right" *ngIf="ftWBTC_Balance.aum === 0">0%</h3>
       </div>
       <div class="item">
         <h4>AUM Balance:</h4>
