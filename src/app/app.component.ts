@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import {
   IB3CRV_GAUGE,
   IDLE_USDC,
+  IDLE,
   USDC,
   FarmBoss_USDC,
   IBETH,
@@ -25,7 +26,7 @@ import farmTreasury from '../constants/FarmTreasury.json';
 
 let Web3: any;
 const COIN_PRICE_URL =
-  'https://api.coingecko.com/api/v3/simple/price?ids=ethereum,wrapped-bitcoin,compound-wrapped-btc,interest-bearing-eth&vs_currencies=usd';
+  'https://api.coingecko.com/api/v3/simple/price?ids=ethereum,wrapped-bitcoin,compound-wrapped-btc,interest-bearing-eth,idle&vs_currencies=usd';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -38,6 +39,7 @@ export class AppComponent {
   ib3CRV_GAUGE: any;
   idle_USDC: any;
   usdc: any;
+  idle: any;
 
   // eth reward token contract
   ibETH: any;
@@ -60,9 +62,17 @@ export class AppComponent {
   usdcPrice = 1;
   compoundBTCPrice = 0;
   ibETHPrice = 0;
+  idlePrice = 0;
+
   // Balance
 
-  fbUSDC_Balance = { usdc: 0, ib3CRV_Gauge: 0, idle_USDC: 0, totalValue: 0 };
+  fbUSDC_Balance = {
+    usdc: 0,
+    ib3CRV_Gauge: 0,
+    idle_USDC: 0,
+    totalValue: 0,
+    idle: 0,
+  };
   fbETH_Balance = { wETH: 0, eCRV_Gauge: 0, ibETH: 0, totalValue: 0 };
   fbWBTC_Balance = { wBTC: 0, compound_WBTC: 0, stack_ETH: 0, totalValue: 0 };
 
@@ -83,6 +93,7 @@ export class AppComponent {
       this.wBTCPrice = res['wrapped-bitcoin']['usd'];
       this.compoundBTCPrice = res['compound-wrapped-btc']['usd'];
       this.ibETHPrice = res['interest-bearing-eth']['usd'];
+      this.idlePrice = res['idle']['usd'];
     });
   }
   injectScript() {
@@ -122,6 +133,8 @@ export class AppComponent {
 
     this.usdc = new this.web3.eth.Contract(usdc, USDC);
 
+    this.idle = new this.web3.eth.Contract(balanceABI, IDLE);
+
     // Get the balance of FarmBoss_USDC
     const usdcBalanceWei = await this.usdc.methods
       .balanceOf(FarmBoss_USDC)
@@ -141,10 +154,16 @@ export class AppComponent {
       ib3CRV_GaugeBalanceWei
     );
 
+    const idle_BalanceWei = await this.idle.methods
+      .balanceOf(FarmBoss_USDC)
+      .call();
+    this.fbUSDC_Balance.idle = this.web3.utils.fromWei(idle_BalanceWei);
+
     this.fbUSDC_Balance.totalValue =
       this.fbUSDC_Balance.usdc * this.usdcPrice +
       this.fbUSDC_Balance.idle_USDC * this.usdcPrice +
-      this.fbUSDC_Balance.ib3CRV_Gauge * this.usdcPrice;
+      this.fbUSDC_Balance.ib3CRV_Gauge * this.usdcPrice +
+      this.fbUSDC_Balance.idle * this.idlePrice;
 
     // Get the balance of FarmBoss_ETH
     this.ibETH = new this.web3.eth.Contract(balanceABI, IBETH);

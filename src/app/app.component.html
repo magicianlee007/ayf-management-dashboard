@@ -15,6 +15,10 @@
         <h3 class="right">{{ fbUSDC_Balance.usdc }}</h3>
       </div>
       <div class="item">
+        <h4>IDLE Balance:</h4>
+        <h3 class="right">{{ fbUSDC_Balance.idle }}</h3>
+      </div>
+      <div class="item">
         <h4>IDLE Strategy:</h4>
         <h3 class="right" *ngIf="fbUSDC_Balance.totalValue > 0">
           {{
