@@ -4,6 +4,7 @@ import {
   IB3CRV_GAUGE,
   IDLE_USDC,
   IDLE,
+  IDLE_USDC_V4,
   USDC,
   FarmBoss_USDC,
   IBETH,
@@ -23,6 +24,7 @@ import idle_USDC from '../constants/idle_USDC.json';
 import usdc from '../constants/usdc.json';
 import balanceABI from '../constants/BalanceOfABI.json';
 import farmTreasury from '../constants/FarmTreasury.json';
+import idleUSDCv4ABI from '../constants/idleUSDCv4.json';
 
 let Web3: any;
 const COIN_PRICE_URL =
@@ -40,6 +42,7 @@ export class AppComponent {
   idle_USDC: any;
   usdc: any;
   idle: any;
+  idleUSDCv4: any; /// to get the unclaimed balance
 
   // eth reward token contract
   ibETH: any;
@@ -72,6 +75,7 @@ export class AppComponent {
     idle_USDC: 0,
     totalValue: 0,
     idle: 0,
+    unclaimedIdle: 0,
   };
   fbETH_Balance = { wETH: 0, eCRV_Gauge: 0, ibETH: 0, totalValue: 0 };
   fbWBTC_Balance = { wBTC: 0, compound_WBTC: 0, stack_ETH: 0, totalValue: 0 };
@@ -135,6 +139,7 @@ export class AppComponent {
 
     this.idle = new this.web3.eth.Contract(balanceABI, IDLE);
 
+    this.idleUSDCv4 = new this.web3.eth.Contract(idleUSDCv4ABI, IDLE_USDC_V4);
     // Get the balance of FarmBoss_USDC
     const usdcBalanceWei = await this.usdc.methods
       .balanceOf(FarmBoss_USDC)
@@ -158,6 +163,13 @@ export class AppComponent {
       .balanceOf(FarmBoss_USDC)
       .call();
     this.fbUSDC_Balance.idle = this.web3.utils.fromWei(idle_BalanceWei);
+
+    const unclaimedIdleUSDCv4 = await this.idleUSDCv4.methods
+      .getGovTokensAmounts(FarmBoss_USDC)
+      .call();
+    this.fbUSDC_Balance.unclaimedIdle = this.web3.utils.fromWei(
+      unclaimedIdleUSDCv4[1]
+    );
 
     this.fbUSDC_Balance.totalValue =
       this.fbUSDC_Balance.usdc * this.usdcPrice +
