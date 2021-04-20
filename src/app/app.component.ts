@@ -76,6 +76,7 @@ export class AppComponent {
     totalValue: 0,
     idle: 0,
     unclaimedIdle: 0,
+    unclaimedCrv: 0,
   };
   fbETH_Balance = { wETH: 0, eCRV_Gauge: 0, ibETH: 0, totalValue: 0 };
   fbWBTC_Balance = { wBTC: 0, compound_WBTC: 0, stack_ETH: 0, totalValue: 0 };
@@ -157,6 +158,13 @@ export class AppComponent {
       .call();
     this.fbUSDC_Balance.ib3CRV_Gauge = this.web3.utils.fromWei(
       ib3CRV_GaugeBalanceWei
+    );
+
+    const crvUnclaimedRewards = await this.ib3CRV_GAUGE.methods
+      .claimable_tokens(FarmBoss_USDC)
+      .call();
+    this.fbUSDC_Balance.unclaimedCrv = this.web3.utils.fromWei(
+      crvUnclaimedRewards
     );
 
     const idle_BalanceWei = await this.idle.methods
