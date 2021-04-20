@@ -19,7 +19,7 @@ import {
   FarmTreasury_ETH,
   FarmTreasury_WBTC,
 } from '../constants/contractAddresses';
-import ib3CRV_GAUGE from '../constants/ib3CRV_GAUGE.json';
+import CRV_GAUGE from '../constants/CRV_GAUGE.json';
 import idle_USDC from '../constants/idle_USDC.json';
 import usdc from '../constants/usdc.json';
 import balanceABI from '../constants/BalanceOfABI.json';
@@ -79,7 +79,14 @@ export class AppComponent {
     unclaimedCrv: 0,
     unclaimedTotalValue: 0,
   };
-  fbETH_Balance = { wETH: 0, eCRV_Gauge: 0, ibETH: 0, totalValue: 0 };
+  fbETH_Balance = {
+    wETH: 0,
+    eCRV_Gauge: 0,
+    ibETH: 0,
+    totalValue: 0,
+    unclaimedCrv: 0,
+    uncalimedTotalValue: 0,
+  };
   fbWBTC_Balance = { wBTC: 0, compound_WBTC: 0, stack_ETH: 0, totalValue: 0 };
 
   ftUSDC_Balance = { usdc: 0, aum: 0 };
@@ -134,7 +141,7 @@ export class AppComponent {
   async initContract() {
     // Create ib3CRV_GAUGE, USDC, idle_USDC contract
 
-    this.ib3CRV_GAUGE = new this.web3.eth.Contract(ib3CRV_GAUGE, IB3CRV_GAUGE);
+    this.ib3CRV_GAUGE = new this.web3.eth.Contract(CRV_GAUGE, IB3CRV_GAUGE);
 
     this.idle_USDC = new this.web3.eth.Contract(idle_USDC, IDLE_USDC);
 
@@ -204,13 +211,22 @@ export class AppComponent {
       .call();
     this.fbETH_Balance.wETH = this.web3.utils.fromWei(wEthBalanceWei);
 
-    this.eCRV_GAUGE = new this.web3.eth.Contract(balanceABI, ECRV_GAUGE);
+    this.eCRV_GAUGE = new this.web3.eth.Contract(CRV_GAUGE, ECRV_GAUGE);
     const eCrvGaugeBalanceWei = await this.eCRV_GAUGE.methods
       .balanceOf(FarmBoss_ETH)
       .call();
     this.fbETH_Balance.eCRV_Gauge = this.web3.utils.fromWei(
       eCrvGaugeBalanceWei
     );
+
+    const unclaimedCrvEthWei = await this.eCRV_GAUGE.methods
+      .claimable_tokens(FarmBoss_ETH)
+      .call();
+    this.fbETH_Balance.unclaimedCrv = this.web3.utils.fromWei(
+      unclaimedCrvEthWei
+    );
+
+    console.log(this.fbETH_Balance.unclaimedCrv);
 
     this.fbETH_Balance.totalValue =
       this.fbETH_Balance.ibETH * this.ibETHPrice +

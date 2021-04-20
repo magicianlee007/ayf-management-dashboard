@@ -1,0 +1,18 @@
+[
+  {
+    "name": "balanceOf",
+    "outputs": [{ "type": "uint256", "name": "" }],
+    "inputs": [{ "type": "address", "name": "arg0" }],
+    "stateMutability": "view",
+    "type": "function",
+    "gas": 2206
+  },
+  {
+    "name": "claimable_tokens",
+    "outputs": [{ "type": "uint256", "name": "" }],
+    "inputs": [{ "type": "address", "name": "addr" }],
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "gas": 1989830
+  }
+]
