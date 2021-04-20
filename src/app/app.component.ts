@@ -28,7 +28,7 @@ import idleUSDCv4ABI from '../constants/idleUSDCv4.json';
 
 let Web3: any;
 const COIN_PRICE_URL =
-  'https://api.coingecko.com/api/v3/simple/price?ids=ethereum,wrapped-bitcoin,compound-wrapped-btc,interest-bearing-eth,idle&vs_currencies=usd';
+  'https://api.coingecko.com/api/v3/simple/price?ids=ethereum,wrapped-bitcoin,compound-wrapped-btc,interest-bearing-eth,idle,curve-dao-token&vs_currencies=usd';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -66,7 +66,7 @@ export class AppComponent {
   compoundBTCPrice = 0;
   ibETHPrice = 0;
   idlePrice = 0;
-
+  crvPrice = 0;
   // Balance
 
   fbUSDC_Balance = {
@@ -77,6 +77,7 @@ export class AppComponent {
     idle: 0,
     unclaimedIdle: 0,
     unclaimedCrv: 0,
+    unclaimedTotalValue: 0,
   };
   fbETH_Balance = { wETH: 0, eCRV_Gauge: 0, ibETH: 0, totalValue: 0 };
   fbWBTC_Balance = { wBTC: 0, compound_WBTC: 0, stack_ETH: 0, totalValue: 0 };
@@ -99,6 +100,7 @@ export class AppComponent {
       this.compoundBTCPrice = res['compound-wrapped-btc']['usd'];
       this.ibETHPrice = res['interest-bearing-eth']['usd'];
       this.idlePrice = res['idle']['usd'];
+      this.crvPrice = res['curve-dao-token']['usd'];
     });
   }
   injectScript() {
@@ -160,13 +162,6 @@ export class AppComponent {
       ib3CRV_GaugeBalanceWei
     );
 
-    const crvUnclaimedRewards = await this.ib3CRV_GAUGE.methods
-      .claimable_tokens(FarmBoss_USDC)
-      .call();
-    this.fbUSDC_Balance.unclaimedCrv = this.web3.utils.fromWei(
-      crvUnclaimedRewards
-    );
-
     const idle_BalanceWei = await this.idle.methods
       .balanceOf(FarmBoss_USDC)
       .call();
@@ -179,11 +174,22 @@ export class AppComponent {
       unclaimedIdleUSDCv4[1]
     );
 
+    const crvUnclaimedRewards = await this.ib3CRV_GAUGE.methods
+      .claimable_tokens(FarmBoss_USDC)
+      .call();
+    this.fbUSDC_Balance.unclaimedCrv = this.web3.utils.fromWei(
+      crvUnclaimedRewards
+    );
+
     this.fbUSDC_Balance.totalValue =
       this.fbUSDC_Balance.usdc * this.usdcPrice +
       this.fbUSDC_Balance.idle_USDC * this.usdcPrice +
       this.fbUSDC_Balance.ib3CRV_Gauge * this.usdcPrice +
       this.fbUSDC_Balance.idle * this.idlePrice;
+    // Get unclaimed total value
+    this.fbUSDC_Balance.unclaimedTotalValue =
+      this.fbUSDC_Balance.unclaimedCrv * this.crvPrice +
+      this.fbUSDC_Balance.unclaimedIdle * this.idlePrice;
 
     // Get the balance of FarmBoss_ETH
     this.ibETH = new this.web3.eth.Contract(balanceABI, IBETH);
