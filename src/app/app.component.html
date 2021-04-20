@@ -147,6 +147,14 @@
         <h3 class="right">{{ fbWBTC_Balance.stack_ETH }}</h3>
       </div>
       <div class="item">
+        <h4>hCRV-gauge Balance:</h4>
+        <h3 class="right">{{ fbWBTC_Balance.hCrvGauge }}</h3>
+      </div>
+      <div class="item">
+        <h4>Curve Balance(Unclaimed)</h4>
+        <h3 class="right">{{ fbWBTC_Balance.unclaimedCrv }}</h3>
+      </div>
+      <div class="item">
         <h4>Total Value:</h4>
         <h2 class="right">
           {{ fbWBTC_Balance.totalValue.toLocaleString() }} USD

@@ -14,6 +14,7 @@ export const ECRV_GAUGE = '0x3c0ffff15ea30c35d7a85b85c0782d6c94e1d238';
 export const WBTC = '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599';
 export const COMPOUND_WBTC = '0xccf4429db6322d5c611ee964527d42e5d685dd6a';
 export const STACK_ETH = '0x70e51DFc7A9FC391995C2B2f027BC49D4fe01577';
+export const HBTC_GAUGE = '0x4c18e409dc8619bfb6a1cb56d114c3f592e0ae79';
 
 export const FarmTreasury_USDC = '0x067b9FE006E16f52BBf647aB6799f87566480D2c';
 export const FarmBoss_USDC = '0xfB2Ccc29e312554bc264cB83497A7137c1532e2f';
