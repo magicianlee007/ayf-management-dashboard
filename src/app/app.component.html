@@ -139,12 +139,32 @@
         <h3 class="right">{{ fbWBTC_Balance.wBTC }}</h3>
       </div>
       <div class="item">
+        <h4>Compound Strategy:</h4>
+        <h3 class="right" *ngIf="fbETH_Balance.totalValue > 0">
+          {{
+            ((fbWBTC_Balance.compound_WBTC * compoundBTCPrice) / fbWBTC_Balance.totalValue) *
+              100 | number: "1.2-2"
+          }}%
+        </h3>
+        <h3 class="right" *ngIf="fbWBTC_Balance.totalValue === 0">0%</h3>
+      </div>
+      <div class="item">
         <h4>Compound WBTC Balance:</h4>
         <h3 class="right">{{ fbWBTC_Balance.compound_WBTC }}</h3>
       </div>
       <div class="item">
         <h4>stackETH Balance:</h4>
         <h3 class="right">{{ fbWBTC_Balance.stack_ETH }}</h3>
+      </div>
+      <div class="item">
+        <h4>CurveFinance Strategy:</h4>
+        <h3 class="right" *ngIf="fbETH_Balance.totalValue > 0">
+          {{
+            ((fbWBTC_Balance.hCrvGauge * crvPrice) / fbWBTC_Balance.totalValue) *
+              100 | number: "1.2-2"
+          }}%
+        </h3>
+        <h3 class="right" *ngIf="fbWBTC_Balance.totalValue === 0">0%</h3>
       </div>
       <div class="item">
         <h4>hCRV-gauge Balance:</h4>
@@ -158,6 +178,12 @@
         <h4>Total Value:</h4>
         <h2 class="right">
           {{ fbWBTC_Balance.totalValue.toLocaleString() }} USD
+        </h2>
+      </div>
+      <div class="item">
+        <h4>Total in WBTC:</h4>
+        <h2 class="right">
+          {{ fbWBTC_Balance.totalValue / wBTCPrice }} WBTC
         </h2>
       </div>
     </div>
