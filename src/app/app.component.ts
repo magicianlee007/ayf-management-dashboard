@@ -19,6 +19,7 @@ import {
   FarmTreasury_USDC,
   FarmTreasury_ETH,
   FarmTreasury_WBTC,
+  CRV_IB_POOL,
 } from '../constants/contractAddresses';
 import CRV_GAUGE from '../constants/CRV_GAUGE.json';
 import idle_USDC from '../constants/idle_USDC.json';
@@ -26,6 +27,7 @@ import usdc from '../constants/usdc.json';
 import balanceABI from '../constants/BalanceOfABI.json';
 import farmTreasury from '../constants/FarmTreasury.json';
 import idleUSDCv4ABI from '../constants/idleUSDCv4.json';
+import crvIbPool from '../constants/crvIbPool.json';
 
 let Web3: any;
 const COIN_PRICE_URL =
@@ -38,6 +40,8 @@ const COIN_PRICE_URL =
 export class AppComponent {
   title = 'ayf-management-dashboard';
   web3: any;
+  // stableSwap
+  crvIbPool: any;
   // usdc reward token contract
   ib3CRV_GAUGE: any;
   idle_USDC: any;
@@ -101,6 +105,7 @@ export class AppComponent {
   ftUSDC_Balance = { usdc: 0, aum: 0 };
   ftWETH_Balance = { wETH: 0, aum: 0 };
   ftWBTC_Balance = { wBTC: 0, aum: 0 };
+  crvVirtualPrice = 0;
 
   constructor(private http: HttpClient) {
     if (!window['Web3']) {
@@ -148,6 +153,12 @@ export class AppComponent {
     console.error('web3 error injected');
   }
   async initContract() {
+    // Create crvStableSwap contract
+    this.crvIbPool = new this.web3.eth.Contract(crvIbPool, CRV_IB_POOL);
+    const virtualPriceWei = await this.crvIbPool.methods
+      .get_virtual_price()
+      .call();
+    this.crvVirtualPrice = this.web3.utils.fromWei(virtualPriceWei);
     // Create ib3CRV_GAUGE, USDC, idle_USDC contract
 
     this.ib3CRV_GAUGE = new this.web3.eth.Contract(CRV_GAUGE, IB3CRV_GAUGE);
