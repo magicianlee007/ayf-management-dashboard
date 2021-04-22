@@ -2,9 +2,6 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {
   IB3CRV_GAUGE,
-  IDLE_USDC,
-  IDLE,
-  IDLE_USDC_V4,
   USDC,
   FarmBoss_USDC,
   IBETH,
@@ -21,12 +18,10 @@ import {
   FarmTreasury_WBTC,
   CRV_IB_POOL,
 } from '../constants/contractAddresses';
-import CRV_GAUGE from '../constants/CRV_GAUGE.json';
-import idle_USDC from '../constants/idle_USDC.json';
+import crvGauge from '../constants/crvGauge.json';
 import usdc from '../constants/usdc.json';
 import balanceABI from '../constants/BalanceOfABI.json';
 import farmTreasury from '../constants/FarmTreasury.json';
-import idleUSDCv4ABI from '../constants/idleUSDCv4.json';
 import crvIbPool from '../constants/crvIbPool.json';
 
 let Web3: any;
@@ -44,10 +39,7 @@ export class AppComponent {
   crvIbPool: any;
   // usdc reward token contract
   ib3CRV_GAUGE: any;
-  idle_USDC: any;
   usdc: any;
-  idle: any;
-  idleUSDCv4: any; /// to get the unclaimed balance
 
   // eth reward token contract
   ibETH: any;
@@ -71,17 +63,13 @@ export class AppComponent {
   usdcPrice = 1;
   compoundBTCPrice = 0;
   ibETHPrice = 0;
-  idlePrice = 0;
   crvPrice = 0;
   // Balance
 
   fbUSDC_Balance = {
     usdc: 0,
     ib3CRV_Gauge: 0,
-    idle_USDC: 0,
     totalValue: 0,
-    idle: 0,
-    unclaimedIdle: 0,
     unclaimedCrv: 0,
     unclaimedTotalValue: 0,
   };
@@ -120,7 +108,6 @@ export class AppComponent {
       this.wBTCPrice = res['wrapped-bitcoin']['usd'];
       this.compoundBTCPrice = res['compound-wrapped-btc']['usd'];
       this.ibETHPrice = res['interest-bearing-eth']['usd'];
-      this.idlePrice = res['idle']['usd'];
       this.crvPrice = res['curve-dao-token']['usd'];
     });
   }
@@ -161,15 +148,10 @@ export class AppComponent {
     this.crvVirtualPrice = this.web3.utils.fromWei(virtualPriceWei);
     // Create ib3CRV_GAUGE, USDC, idle_USDC contract
 
-    this.ib3CRV_GAUGE = new this.web3.eth.Contract(CRV_GAUGE, IB3CRV_GAUGE);
-
-    this.idle_USDC = new this.web3.eth.Contract(idle_USDC, IDLE_USDC);
+    this.ib3CRV_GAUGE = new this.web3.eth.Contract(crvGauge, IB3CRV_GAUGE);
 
     this.usdc = new this.web3.eth.Contract(usdc, USDC);
 
-    this.idle = new this.web3.eth.Contract(balanceABI, IDLE);
-
-    this.idleUSDCv4 = new this.web3.eth.Contract(idleUSDCv4ABI, IDLE_USDC_V4);
     // Get the balance of FarmBoss_USDC
     const usdcBalanceWei = await this.usdc.methods
       .balanceOf(FarmBoss_USDC)
@@ -177,28 +159,11 @@ export class AppComponent {
     // const usdcDecimals = await this.usdc.methods.decimals().call();
     this.fbUSDC_Balance.usdc = this.web3.utils.fromWei(usdcBalanceWei, 'mwei');
 
-    const idleUSDCBalanceWei = await this.idle_USDC.methods
-      .balanceOf(FarmBoss_USDC)
-      .call();
-    this.fbUSDC_Balance.idle_USDC = this.web3.utils.fromWei(idleUSDCBalanceWei);
-
     const ib3CRV_GaugeBalanceWei = await this.ib3CRV_GAUGE.methods
       .balanceOf(FarmBoss_USDC)
       .call();
     this.fbUSDC_Balance.ib3CRV_Gauge = this.web3.utils.fromWei(
       ib3CRV_GaugeBalanceWei
-    );
-
-    const idle_BalanceWei = await this.idle.methods
-      .balanceOf(FarmBoss_USDC)
-      .call();
-    this.fbUSDC_Balance.idle = this.web3.utils.fromWei(idle_BalanceWei);
-
-    const unclaimedIdleUSDCv4 = await this.idleUSDCv4.methods
-      .getGovTokensAmounts(FarmBoss_USDC)
-      .call();
-    this.fbUSDC_Balance.unclaimedIdle = this.web3.utils.fromWei(
-      unclaimedIdleUSDCv4[1]
     );
 
     const crvUnclaimedRewards = await this.ib3CRV_GAUGE.methods
@@ -210,13 +175,10 @@ export class AppComponent {
 
     this.fbUSDC_Balance.totalValue =
       this.fbUSDC_Balance.usdc * this.usdcPrice +
-      this.fbUSDC_Balance.idle_USDC * this.usdcPrice +
-      this.fbUSDC_Balance.ib3CRV_Gauge * this.usdcPrice +
-      this.fbUSDC_Balance.idle * this.idlePrice;
+      this.fbUSDC_Balance.ib3CRV_Gauge * this.usdcPrice;
     // Get unclaimed total value
     this.fbUSDC_Balance.unclaimedTotalValue =
-      this.fbUSDC_Balance.unclaimedCrv * this.crvPrice +
-      this.fbUSDC_Balance.unclaimedIdle * this.idlePrice;
+      this.fbUSDC_Balance.unclaimedCrv * this.crvPrice;
 
     // Get the balance of FarmBoss_ETH
     this.ibETH = new this.web3.eth.Contract(balanceABI, IBETH);
@@ -231,7 +193,7 @@ export class AppComponent {
       .call();
     this.fbETH_Balance.wETH = this.web3.utils.fromWei(wEthBalanceWei);
 
-    this.eCRV_GAUGE = new this.web3.eth.Contract(CRV_GAUGE, ECRV_GAUGE);
+    this.eCRV_GAUGE = new this.web3.eth.Contract(crvGauge, ECRV_GAUGE);
     const eCrvGaugeBalanceWei = await this.eCRV_GAUGE.methods
       .balanceOf(FarmBoss_ETH)
       .call();
@@ -272,7 +234,7 @@ export class AppComponent {
       .call();
     this.fbWBTC_Balance.stack_ETH = this.web3.utils.fromWei(stackETHBalanceWei);
 
-    this.hCrvGauge = new this.web3.eth.Contract(CRV_GAUGE, HBTC_GAUGE);
+    this.hCrvGauge = new this.web3.eth.Contract(crvGauge, HBTC_GAUGE);
     const hCrvGaugeInWei = await this.hCrvGauge.methods
       .balanceOf(FarmBoss_WBTC)
       .call();
