@@ -38,9 +38,14 @@
       }
       a {
         text-decoration: none;
-        text-align: center;
-        h3 {
+        // text-align: center;
+        h2,
+        h3,
+        h4 {
           color: #6e8ce4;
+          &:hover {
+            color: #3b69ff;
+          }
         }
       }
     }

@@ -1,21 +1,22 @@
 <div class="wrapper">
   <h1>Active Yield Fund Monitoring</h1>
-  <h3>Curve Virtual Price: {{ crvVirtualPrice | number: "1.4-4"}} </h3>
+  <h3>Curve Virtual Price: {{ crvVirtualPrice | number: "1.4-4" }}</h3>
   <div class="cards">
     <div class="card">
-      <h2>FarmBossUSDC</h2>
       <a
         href="https://etherscan.io/address/0xfB2Ccc29e312554bc264cB83497A7137c1532e2f"
         target="_blank"
       >
-        <h3>0xfB2Ccc29e312554bc264cB83497A7137c1532e2f</h3>
+        <h2>FarmBossUSDC</h2>
       </a>
       <div class="item">
         <h4>USDC Balance:</h4>
         <h3 class="right">{{ fbUSDC_Balance.usdc }}</h3>
       </div>
       <div class="item">
-        <h4>CurveFinance Strategy:</h4>
+        <a href="https://curve.fi/ib" target="_blank">
+          <h4>CurveFinance Strategy:</h4>
+        </a>
         <h3 class="right" *ngIf="fbUSDC_Balance.totalValue > 0">
           {{
             (fbUSDC_Balance.ib3CRV_Gauge / fbUSDC_Balance.totalValue) * 100
@@ -47,19 +48,20 @@
     </div>
 
     <div class="card">
-      <h2>FarmBossETH</h2>
       <a
         href="https://etherscan.io/address/0x7B4a6b798f803512fc53ed656fBc510F022389E5"
         target="_blank"
       >
-        <h3>0x7B4a6b798f803512fc53ed656fBc510F022389E5</h3>
+        <h2>FarmBossETH</h2>
       </a>
       <div class="item">
         <h4>WETH Balance:</h4>
         <h3 class="right">{{ fbETH_Balance.wETH }}</h3>
       </div>
       <div class="item">
-        <h4>AlphaFinance Strategy:</h4>
+        <a href="https://homora.alphafinance.io/earn" target="_blank">
+          <h4>AlphaFinance Strategy:</h4>
+        </a>
         <h3 class="right" *ngIf="fbETH_Balance.totalValue > 0">
           {{
             ((fbETH_Balance.ibETH * ethPrice) / fbETH_Balance.totalValue) * 100
@@ -73,7 +75,9 @@
         <h3 class="right">{{ fbETH_Balance.ibETH }}</h3>
       </div>
       <div class="item">
-        <h4>CurveFinance Strategy:</h4>
+        <a href="https://dao.curve.fi/" target="_blank">
+          <h4>CurveFinance Strategy:</h4>
+        </a>
         <h3 class="right" *ngIf="fbETH_Balance.totalValue > 0">
           {{
             ((fbETH_Balance.eCRV_Gauge * ethPrice) / fbETH_Balance.totalValue) *
@@ -98,29 +102,29 @@
       </div>
       <div class="item">
         <h4>Total ETH value:</h4>
-        <h2 class="right">
-          {{ fbETH_Balance.totalValue / ethPrice }} ETH
-        </h2>
+        <h2 class="right">{{ fbETH_Balance.totalValue / ethPrice }} ETH</h2>
       </div>
     </div>
 
     <div class="card">
-      <h2>FarmBossWBTC</h2>
       <a
         href="https://etherscan.io/address/0xCbAb999b25850c6530bcA365e5005702CB6Bf006"
         target="_blank"
       >
-        <h3>0xCbAb999b25850c6530bcA365e5005702CB6Bf006</h3>
+        <h2>FarmBossWBTC</h2>
       </a>
       <div class="item">
         <h4>WBTC Balance:</h4>
         <h3 class="right">{{ fbWBTC_Balance.wBTC }}</h3>
       </div>
       <div class="item">
-        <h4>Compound Strategy:</h4>
+        <a href="https://app.compound.finance/" target="_blank">
+          <h4>Compound Strategy:</h4>
+        </a>
         <h3 class="right" *ngIf="fbETH_Balance.totalValue > 0">
           {{
-            ((fbWBTC_Balance.compound_WBTC * compoundBTCPrice) / fbWBTC_Balance.totalValue) *
+            ((fbWBTC_Balance.compound_WBTC * compoundBTCPrice) /
+              fbWBTC_Balance.totalValue) *
               100 | number: "1.2-2"
           }}%
         </h3>
@@ -135,10 +139,13 @@
         <h3 class="right">{{ fbWBTC_Balance.stack_ETH }}</h3>
       </div>
       <div class="item">
-        <h4>CurveFinance Strategy:</h4>
+        <a href="https://dao.curve.fi/" target="_blank">
+          <h4>CurveFinance Strategy:</h4>
+        </a>
         <h3 class="right" *ngIf="fbETH_Balance.totalValue > 0">
           {{
-            ((fbWBTC_Balance.hCrvGauge * crvPrice) / fbWBTC_Balance.totalValue) *
+            ((fbWBTC_Balance.hCrvGauge * crvPrice) /
+              fbWBTC_Balance.totalValue) *
               100 | number: "1.2-2"
           }}%
         </h3>
@@ -160,21 +167,18 @@
       </div>
       <div class="item">
         <h4>Total in WBTC:</h4>
-        <h2 class="right">
-          {{ fbWBTC_Balance.totalValue / wBTCPrice }} WBTC
-        </h2>
+        <h2 class="right">{{ fbWBTC_Balance.totalValue / wBTCPrice }} WBTC</h2>
       </div>
     </div>
   </div>
 
   <div class="cards">
     <div class="treasury_card card">
-      <h2>FarmTreasuryUSDC</h2>
       <a
         href="https://etherscan.io/address/0x067b9FE006E16f52BBf647aB6799f87566480D2c"
         target="_blank"
       >
-        <h3>0x067b9FE006E16f52BBf647aB6799f87566480D2c</h3>
+        <h2>FarmTreasuryUSDC</h2>
       </a>
       <div class="item">
         <h4>USDC Balance:</h4>
@@ -194,12 +198,11 @@
       </div>
     </div>
     <div class="treasury_card card">
-      <h2>FarmTreasuryETH</h2>
       <a
         href="https://etherscan.io/address/0x70e51DFc7A9FC391995C2B2f027BC49D4fe01577"
         target="_blank"
       >
-        <h3>0x70e51DFc7A9FC391995C2B2f027BC49D4fe01577</h3>
+        <h2>FarmTreasuryETH</h2>
       </a>
       <div class="item">
         <h4>WETH Balance:</h4>
@@ -219,12 +222,11 @@
       </div>
     </div>
     <div class="treasury_card card">
-      <h2>FarmTreasuryWBTC</h2>
       <a
         href="https://etherscan.io/address/0x17E9ed51feD2F190D50f5bd4f1a8C9CbCd36162A"
         target="_blank"
       >
-        <h3>0x17E9ed51feD2F190D50f5bd4f1a8C9CbCd36162A</h3>
+        <h2>FarmTreasuryWBTC</h2>
       </a>
       <div class="item">
         <h4>WBTC Balance:</h4>
