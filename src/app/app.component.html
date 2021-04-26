@@ -144,7 +144,7 @@
         </a>
         <h3 class="right" *ngIf="fbETH_Balance.totalValue > 0">
           {{
-            ((fbWBTC_Balance.hCrvGauge * crvPrice) /
+            ((fbWBTC_Balance.hCrvGauge * wBTCPrice) /
               fbWBTC_Balance.totalValue) *
               100 | number: "1.2-2"
           }}%

@@ -218,8 +218,7 @@ export class AppComponent {
     const wBTCBalanceWei = await this.wBTC.methods
       .balanceOf(FarmBoss_WBTC)
       .call();
-    this.fbWBTC_Balance.wBTC =
-      this.web3.utils.fromWei(wBTCBalanceWei, 'gwei') * 10;
+    this.fbWBTC_Balance.wBTC = this.web3.utils.fromWei(wBTCBalanceWei, 'gwei');
 
     this.compound_BTC = new this.web3.eth.Contract(balanceABI, COMPOUND_WBTC);
     const compoundWBTCBalanceWei = await this.compound_BTC.methods
@@ -246,9 +245,9 @@ export class AppComponent {
       unclaimedCrvWbtcWei
     );
     this.fbWBTC_Balance.totalValue =
-      this.fbWBTC_Balance.stack_ETH * this.ethPrice +
       this.fbWBTC_Balance.compound_WBTC * this.compoundBTCPrice +
-      this.fbWBTC_Balance.wBTC * this.wBTCPrice;
+      this.fbWBTC_Balance.wBTC * this.wBTCPrice +
+      this.fbWBTC_Balance.hCrvGauge * this.wBTCPrice;
 
     // Get the FarmTreasuryUSDC's USDC balance
     const ftUSDCBalanceWei = await this.usdc.methods
