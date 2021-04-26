@@ -218,7 +218,8 @@ export class AppComponent {
     const wBTCBalanceWei = await this.wBTC.methods
       .balanceOf(FarmBoss_WBTC)
       .call();
-    this.fbWBTC_Balance.wBTC = this.web3.utils.fromWei(wBTCBalanceWei, 'gwei');
+    this.fbWBTC_Balance.wBTC =
+      this.web3.utils.fromWei(wBTCBalanceWei, 'gwei') * 10;
 
     this.compound_BTC = new this.web3.eth.Contract(balanceABI, COMPOUND_WBTC);
     const compoundWBTCBalanceWei = await this.compound_BTC.methods
