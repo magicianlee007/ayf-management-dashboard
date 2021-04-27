@@ -32,6 +32,13 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        button {
+          padding: 8px 12px;
+        }
+        input {
+          padding: 8px 4px;
+          margin-right: 12px;
+        }
       }
       .right {
         margin-left: auto;

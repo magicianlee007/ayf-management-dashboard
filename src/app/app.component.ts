@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { GasPriceService } from './services/gas-price/gas-price.service';
+
 import {
   IB3CRV_GAUGE,
   USDC,
@@ -23,6 +25,8 @@ import usdc from '../constants/usdc.json';
 import balanceABI from '../constants/BalanceOfABI.json';
 import farmTreasury from '../constants/FarmTreasury.json';
 import crvIbPool from '../constants/crvIbPool.json';
+import farmBossUSDC from '../constants/FarmBossUSDC.json';
+import detectEthereumProvider from '@metamask/detect-provider';
 
 let Web3: any;
 const COIN_PRICE_URL =
@@ -51,6 +55,11 @@ export class AppComponent {
   compound_BTC: any;
   stack_ETH: any;
   hCrvGauge: any;
+
+  // accounts
+  accounts = [];
+  // farmboss contract
+  farmBossUSDC: any;
 
   // treasury contract
   farmTreasuryUSDC: any;
@@ -95,7 +104,11 @@ export class AppComponent {
   ftWBTC_Balance = { wBTC: 0, aum: 0 };
   crvVirtualPrice = 0;
 
-  constructor(private http: HttpClient) {
+  // Params
+  fbUSDCRebalanceAmount: string = '';
+  fbUSDCRebalanceAddress: string = '';
+
+  constructor(private http: HttpClient, private gasService: GasPriceService) {
     if (!window['Web3']) {
       this.injectScript();
     } else {
@@ -123,13 +136,22 @@ export class AppComponent {
 
     document.head.appendChild(script);
   }
-  generateProvider() {
+  async generateProvider() {
     Web3 = window['Web3'];
-    this.web3 = new Web3(
-      new Web3.providers.HttpProvider(
-        'https://mainnet.infura.io/v3/f0f45988269240c1a220bd21fe5ea02a'
-      )
-    );
+    if (window['web3'].currentProvider) {
+      console.log('web3 active', window['web3'].currentProvider);
+      this.web3 = new Web3(window['web3'].currentProvider);
+      this.accounts = await (window['web3'].currentProvider as any).request({
+        method: 'eth_requestAccounts',
+      });
+    } else {
+      this.web3 = new Web3(
+        new Web3.providers.HttpProvider(
+          'https://mainnet.infura.io/v3/f0f45988269240c1a220bd21fe5ea02a'
+        )
+      );
+    }
+
     console.log(this.web3);
   }
   onSuccess() {
@@ -140,6 +162,8 @@ export class AppComponent {
     console.error('web3 error injected');
   }
   async initContract() {
+    // Create FarmBoss Contract
+    this.farmBossUSDC = new this.web3.eth.Contract(farmBossUSDC, FarmBoss_USDC);
     // Create crvStableSwap contract
     this.crvIbPool = new this.web3.eth.Contract(crvIbPool, CRV_IB_POOL);
     const virtualPriceWei = await this.crvIbPool.methods
@@ -303,5 +327,58 @@ export class AppComponent {
       .call();
     this.ftWBTC_Balance.aum =
       this.web3.utils.fromWei(ftWBTCAUMBalanceWei, 'gwei') * 10;
+  }
+
+  async connectWallet() {
+    const provider = await detectEthereumProvider();
+    if (provider) {
+      const accounts = await (provider as any).request({
+        method: 'eth_requestAccounts',
+      });
+    }
+  }
+  async rebalanceFarmBossUSDC() {
+    console.log(
+      'Rebalance FarmBossUSDC',
+      this.fbUSDCRebalanceAddress,
+      this.fbUSDCRebalanceAmount
+    );
+    if (this.accounts.length > 0) {
+      this.gasService.getCurrentGasPrice().subscribe(async (res) => {
+        const rebalanceAmountInWei = this.web3.utils.toWei(
+          this.fbUSDCRebalanceAmount
+        );
+        const gasPrice = res['average'] / 10;
+        await this.farmBossUSDC.methods
+          .rebalanceUp(rebalanceAmountInWei, this.fbUSDCRebalanceAddress)
+          .send({
+            from: this.accounts[0],
+            gasPrice: this.web3.utils.toWei(gasPrice.toString(), 'gwei'),
+            gas: '500000',
+          })
+          .on('transactionHash', function (hash) {
+            console.log('==============Transaction Succeed=============');
+            console.log('TxHash', hash);
+            console.log('==============================================');
+          })
+          .on('receipt', function (receipt) {
+            console.log('=============Transaction Receipt=============');
+            console.log('Receipt', receipt);
+            console.log('=============================================');
+          })
+          .on('confirmation', function (confirmationNumber, receipt) {
+            console.log('==============Transaction Confirmation=============');
+            console.log('Confirmation Number', confirmationNumber);
+            console.log('Receipt', receipt);
+            console.log('===================================================');
+          })
+          .on('error', function (error, receipt) {
+            console.log('============Transaction Failed==============');
+            console.log('Confirmation Number', error);
+            console.log('Receipt', receipt);
+            console.log('============================================');
+          });
+      });
+    }
   }
 }
