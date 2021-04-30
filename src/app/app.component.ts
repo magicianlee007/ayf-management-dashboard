@@ -110,12 +110,9 @@ export class AppComponent {
   crvVirtualPrice = 0;
 
   // Params
-  fbUSDCRebalanceAmount: string = '';
-  fbUSDCRebalanceAddress: string = '';
-  fbETHRebalanceAmount: string = '';
-  fbETHRebalanceAddress: string = '';
-  fbWBTCRebalanceAmount: string = '';
-  fbWBTCRebalanceAddress: string = '';
+  fbRebalanceToken: string = 'usdc';
+  fbRebalanceAmount: string = '';
+  fbRebalanceAddress: string = '';
 
   constructor(private http: HttpClient, private gasService: GasPriceService) {
     if (!window['Web3']) {
@@ -349,43 +346,26 @@ export class AppComponent {
       });
     }
   }
-  async rebalance(type) {
+  async rebalance() {
     if (this.accounts.length > 0) {
-      let farmBossContract = type === 'usdc' ? this.farmBossUSDC : undefined;
-      let rebalanceAmount;
-      let rebalanceToAddress;
-      switch (type) {
-        case 'usdc':
-          farmBossContract = this.farmBossUSDC;
-          rebalanceAmount = this.fbUSDCRebalanceAmount;
-          rebalanceToAddress = this.fbUSDCRebalanceAddress;
-          break;
-        case 'eth':
-          farmBossContract = this.farmBossETH;
-          rebalanceAmount = this.fbETHRebalanceAmount;
-          rebalanceToAddress = this.fbETHRebalanceAddress;
-          break;
-        case 'wbtc':
-          farmBossContract = this.farmBossWBTC;
-          rebalanceAmount = this.fbWBTCRebalanceAmount;
-          rebalanceToAddress = this.fbWBTCRebalanceAddress;
-          break;
-        default:
-          break;
-      }
-
-      console.log(type, farmBossContract, rebalanceToAddress, rebalanceAmount);
+      let farmBossContract =
+        this.fbRebalanceToken === 'usdc'
+          ? this.farmBossUSDC
+          : this.fbRebalanceToken === 'eth'
+          ? this.farmBossETH
+          : this.farmBossWBTC;
 
       this.gasService.getCurrentGasPrice().subscribe(async (res) => {
-        let rebalanceAmountInWei = this.web3.utils.toWei(rebalanceAmount);
-        if (type === 'wbtc') {
+        let rebalanceAmountInWei = this.web3.utils.toWei(
+          this.fbRebalanceAmount
+        );
+        if (this.fbRebalanceToken === 'wbtc') {
           rebalanceAmountInWei =
-            this.web3.utils.toWei(rebalanceAmount, 'gwei') / 10;
+            this.web3.utils.toWei(this.fbRebalanceAmount, 'gwei') / 10;
         }
-        console.log(rebalanceAmountInWei);
         const gasPrice = res['average'] / 10;
         await farmBossContract.methods
-          .rebalanceUp(rebalanceAmountInWei, rebalanceToAddress)
+          .rebalanceUp(rebalanceAmountInWei, this.fbRebalanceAddress)
           .send({
             from: this.accounts[0],
             gasPrice: this.web3.utils.toWei(gasPrice.toString(), 'gwei'),
