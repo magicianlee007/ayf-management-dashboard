@@ -26,6 +26,8 @@ import balanceABI from '../constants/BalanceOfABI.json';
 import farmTreasury from '../constants/FarmTreasury.json';
 import crvIbPool from '../constants/crvIbPool.json';
 import farmBossUSDC from '../constants/FarmBossUSDC.json';
+import farmBossETH from '../constants/FarmBossETH.json';
+import farmBossWBTC from '../constants/FarmBossWBTC.json';
 import detectEthereumProvider from '@metamask/detect-provider';
 
 let Web3: any;
@@ -58,8 +60,11 @@ export class AppComponent {
 
   // accounts
   accounts = [];
+
   // farmboss contract
   farmBossUSDC: any;
+  farmBossETH: any;
+  farmBossWBTC: any;
 
   // treasury contract
   farmTreasuryUSDC: any;
@@ -107,6 +112,10 @@ export class AppComponent {
   // Params
   fbUSDCRebalanceAmount: string = '';
   fbUSDCRebalanceAddress: string = '';
+  fbETHRebalanceAmount: string = '';
+  fbETHRebalanceAddress: string = '';
+  fbWBTCRebalanceAmount: string = '';
+  fbWBTCRebalanceAddress: string = '';
 
   constructor(private http: HttpClient, private gasService: GasPriceService) {
     if (!window['Web3']) {
@@ -164,6 +173,9 @@ export class AppComponent {
   async initContract() {
     // Create FarmBoss Contract
     this.farmBossUSDC = new this.web3.eth.Contract(farmBossUSDC, FarmBoss_USDC);
+    this.farmBossETH = new this.web3.eth.Contract(farmBossETH, FarmBoss_ETH);
+    this.farmBossWBTC = new this.web3.eth.Contract(farmBossWBTC, FarmBoss_WBTC);
+
     // Create crvStableSwap contract
     this.crvIbPool = new this.web3.eth.Contract(crvIbPool, CRV_IB_POOL);
     const virtualPriceWei = await this.crvIbPool.methods
@@ -337,20 +349,43 @@ export class AppComponent {
       });
     }
   }
-  async rebalanceFarmBossUSDC() {
-    console.log(
-      'Rebalance FarmBossUSDC',
-      this.fbUSDCRebalanceAddress,
-      this.fbUSDCRebalanceAmount
-    );
+  async rebalance(type) {
     if (this.accounts.length > 0) {
+      let farmBossContract = type === 'usdc' ? this.farmBossUSDC : undefined;
+      let rebalanceAmount;
+      let rebalanceToAddress;
+      switch (type) {
+        case 'usdc':
+          farmBossContract = this.farmBossUSDC;
+          rebalanceAmount = this.fbUSDCRebalanceAmount;
+          rebalanceToAddress = this.fbUSDCRebalanceAddress;
+          break;
+        case 'eth':
+          farmBossContract = this.farmBossETH;
+          rebalanceAmount = this.fbETHRebalanceAmount;
+          rebalanceToAddress = this.fbETHRebalanceAddress;
+          break;
+        case 'wbtc':
+          farmBossContract = this.farmBossWBTC;
+          rebalanceAmount = this.fbWBTCRebalanceAmount;
+          rebalanceToAddress = this.fbWBTCRebalanceAddress;
+          break;
+        default:
+          break;
+      }
+
+      console.log(type, farmBossContract, rebalanceToAddress, rebalanceAmount);
+
       this.gasService.getCurrentGasPrice().subscribe(async (res) => {
-        const rebalanceAmountInWei = this.web3.utils.toWei(
-          this.fbUSDCRebalanceAmount
-        );
+        let rebalanceAmountInWei = this.web3.utils.toWei(rebalanceAmount);
+        if (type === 'wbtc') {
+          rebalanceAmountInWei =
+            this.web3.utils.toWei(rebalanceAmount, 'gwei') / 10;
+        }
+        console.log(rebalanceAmountInWei);
         const gasPrice = res['average'] / 10;
-        await this.farmBossUSDC.methods
-          .rebalanceUp(rebalanceAmountInWei, this.fbUSDCRebalanceAddress)
+        await farmBossContract.methods
+          .rebalanceUp(rebalanceAmountInWei, rebalanceToAddress)
           .send({
             from: this.accounts[0],
             gasPrice: this.web3.utils.toWei(gasPrice.toString(), 'gwei'),
