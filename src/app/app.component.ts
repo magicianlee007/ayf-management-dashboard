@@ -117,6 +117,10 @@ export class AppComponent {
   fbSwapToken: string = 'usdc';
   fbSwapCallData: string = '';
   fbSwapIsSushi: string = 'sushi';
+  fbExecuteToken: string = 'usdc';
+  fbExecuteAddress: string = '';
+  fbExecuteAmount: string = '';
+  fbExecuteCallData: string = '';
 
   constructor(private http: HttpClient, private gasService: GasPriceService) {
     if (!window['Web3']) {
@@ -405,9 +409,9 @@ export class AppComponent {
     console.log(this.fbSwapCallData, this.fbSwapIsSushi, this.fbSwapToken);
     if (this.accounts.length > 0) {
       let farmBossContract =
-        this.fbRebalanceToken === 'usdc'
+        this.fbSwapToken === 'usdc'
           ? this.farmBossUSDC
-          : this.fbRebalanceToken === 'eth'
+          : this.fbSwapToken === 'eth'
           ? this.farmBossETH
           : this.farmBossWBTC;
       this.gasService.getCurrentGasPrice().subscribe(async (res) => {
@@ -416,6 +420,64 @@ export class AppComponent {
           .sellExactTokensForUnderlyingToken(
             this.web3.utils.toHex(parseInt(this.fbSwapCallData)),
             this.fbSwapIsSushi === 'sushi'
+          )
+          .send({
+            from: this.accounts[0],
+            gasPrice: this.web3.utils.toWei(gasPrice.toString(), 'gwei'),
+            gas: '500000',
+          })
+          .on('transactionHash', function (hash) {
+            console.log('==============Transaction Succeed=============');
+            console.log('TxHash', hash);
+            console.log('==============================================');
+          })
+          .on('receipt', function (receipt) {
+            console.log('=============Transaction Receipt=============');
+            console.log('Receipt', receipt);
+            console.log('=============================================');
+          })
+          .on('confirmation', function (confirmationNumber, receipt) {
+            console.log('==============Transaction Confirmation=============');
+            console.log('Confirmation Number', confirmationNumber);
+            console.log('Receipt', receipt);
+            console.log('===================================================');
+          })
+          .on('error', function (error, receipt) {
+            console.log('============Transaction Failed==============');
+            console.log('Confirmation Number', error);
+            console.log('Receipt', receipt);
+            console.log('============================================');
+          });
+      });
+    }
+  }
+
+  async farmerExecute() {
+    console.log(
+      this.fbExecuteToken,
+      this.fbExecuteAddress,
+      this.fbExecuteAmount,
+      this.fbExecuteCallData
+    );
+    if (this.accounts.length > 0) {
+      let farmBossContract =
+        this.fbExecuteToken === 'usdc'
+          ? this.farmBossUSDC
+          : this.fbExecuteToken === 'eth'
+          ? this.farmBossETH
+          : this.farmBossWBTC;
+      this.gasService.getCurrentGasPrice().subscribe(async (res) => {
+        const gasPrice = res['average'] / 10;
+        let executeAmountInWei = this.web3.utils.toWei(this.fbExecuteAmount);
+        if (this.fbExecuteToken === 'wbtc') {
+          executeAmountInWei =
+            this.web3.utils.toWei(this.fbExecuteAmount, 'gwei') / 10;
+        }
+        await farmBossContract.methods
+          .farmerExecute(
+            this.fbExecuteAddress,
+            executeAmountInWei,
+            this.web3.utils.toHex(parseInt(this.fbExecuteCallData))
           )
           .send({
             from: this.accounts[0],
