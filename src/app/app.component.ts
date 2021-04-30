@@ -370,34 +370,33 @@ export class AppComponent {
         const gasPrice = res['average'] / 10;
         await farmBossContract.methods
           .rebalanceUp(rebalanceAmountInWei, this.fbRebalanceAddress)
-          .call();
-        // .send({
-        //   from: this.accounts[0],
-        //   gasPrice: this.web3.utils.toWei(gasPrice.toString(), 'gwei'),
-        //   gas: '500000',
-        // })
-        // .on('transactionHash', function (hash) {
-        //   console.log('==============Transaction Succeed=============');
-        //   console.log('TxHash', hash);
-        //   console.log('==============================================');
-        // })
-        // .on('receipt', function (receipt) {
-        //   console.log('=============Transaction Receipt=============');
-        //   console.log('Receipt', receipt);
-        //   console.log('=============================================');
-        // })
-        // .on('confirmation', function (confirmationNumber, receipt) {
-        //   console.log('==============Transaction Confirmation=============');
-        //   console.log('Confirmation Number', confirmationNumber);
-        //   console.log('Receipt', receipt);
-        //   console.log('===================================================');
-        // })
-        // .on('error', function (error, receipt) {
-        //   console.log('============Transaction Failed==============');
-        //   console.log('Confirmation Number', error);
-        //   console.log('Receipt', receipt);
-        //   console.log('============================================');
-        // });
+          .send({
+            from: this.accounts[0],
+            gasPrice: this.web3.utils.toWei(gasPrice.toString(), 'gwei'),
+            gas: '500000',
+          })
+          .on('transactionHash', function (hash) {
+            console.log('==============Transaction Succeed=============');
+            console.log('TxHash', hash);
+            console.log('==============================================');
+          })
+          .on('receipt', function (receipt) {
+            console.log('=============Transaction Receipt=============');
+            console.log('Receipt', receipt);
+            console.log('=============================================');
+          })
+          .on('confirmation', function (confirmationNumber, receipt) {
+            console.log('==============Transaction Confirmation=============');
+            console.log('Confirmation Number', confirmationNumber);
+            console.log('Receipt', receipt);
+            console.log('===================================================');
+          })
+          .on('error', function (error, receipt) {
+            console.log('============Transaction Failed==============');
+            console.log('Confirmation Number', error);
+            console.log('Receipt', receipt);
+            console.log('============================================');
+          });
       });
     }
   }
@@ -411,13 +410,41 @@ export class AppComponent {
           : this.fbRebalanceToken === 'eth'
           ? this.farmBossETH
           : this.farmBossWBTC;
-      console.log(this.web3.utils.toHex(parseInt(this.fbSwapCallData)));
-      await farmBossContract.methods
-        .sellExactTokensForUnderlyingToken(
-          this.web3.utils.toHex(parseInt(this.fbSwapCallData)),
-          this.fbSwapIsSushi === 'sushi'
-        )
-        .call();
+      this.gasService.getCurrentGasPrice().subscribe(async (res) => {
+        const gasPrice = res['average'] / 10;
+        await farmBossContract.methods
+          .sellExactTokensForUnderlyingToken(
+            this.web3.utils.toHex(parseInt(this.fbSwapCallData)),
+            this.fbSwapIsSushi === 'sushi'
+          )
+          .send({
+            from: this.accounts[0],
+            gasPrice: this.web3.utils.toWei(gasPrice.toString(), 'gwei'),
+            gas: '500000',
+          })
+          .on('transactionHash', function (hash) {
+            console.log('==============Transaction Succeed=============');
+            console.log('TxHash', hash);
+            console.log('==============================================');
+          })
+          .on('receipt', function (receipt) {
+            console.log('=============Transaction Receipt=============');
+            console.log('Receipt', receipt);
+            console.log('=============================================');
+          })
+          .on('confirmation', function (confirmationNumber, receipt) {
+            console.log('==============Transaction Confirmation=============');
+            console.log('Confirmation Number', confirmationNumber);
+            console.log('Receipt', receipt);
+            console.log('===================================================');
+          })
+          .on('error', function (error, receipt) {
+            console.log('============Transaction Failed==============');
+            console.log('Confirmation Number', error);
+            console.log('Receipt', receipt);
+            console.log('============================================');
+          });
+      });
     }
   }
 }
