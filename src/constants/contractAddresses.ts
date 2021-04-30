@@ -22,3 +22,5 @@ export const FarmTreasury_WBTC = '0x17E9ed51feD2F190D50f5bd4f1a8C9CbCd36162A';
 export const FarmBoss_WBTC = '0xCbAb999b25850c6530bcA365e5005702CB6Bf006';
 
 export const CRV_IB_POOL = '0x2dded6da1bf5dbdf597c45fcfaa3194e53ecfeaf';
+export const CRV_ETH_POOL = '0xc5424B857f758E906013F3555Dad202e4bdB4567';
+export const CRV_WBTC_POOL = '0x7fC77b5c7614E1533320Ea6DDc2Eb61fa00A9714';

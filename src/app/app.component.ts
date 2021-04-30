@@ -19,17 +19,18 @@ import {
   FarmTreasury_ETH,
   FarmTreasury_WBTC,
   CRV_IB_POOL,
+  CRV_ETH_POOL,
+  CRV_WBTC_POOL,
 } from '../constants/contractAddresses';
 import crvGauge from '../constants/crvGauge.json';
 import usdc from '../constants/usdc.json';
 import balanceABI from '../constants/BalanceOfABI.json';
 import farmTreasury from '../constants/FarmTreasury.json';
-import crvIbPool from '../constants/crvIbPool.json';
+import crvPool from '../constants/crvPool.json';
 import farmBossUSDC from '../constants/FarmBossUSDC.json';
 import farmBossETH from '../constants/FarmBossETH.json';
 import farmBossWBTC from '../constants/FarmBossWBTC.json';
 import detectEthereumProvider from '@metamask/detect-provider';
-import { createImportSpecifier } from 'typescript';
 
 let Web3: any;
 const COIN_PRICE_URL =
@@ -43,7 +44,9 @@ export class AppComponent {
   title = 'ayf-management-dashboard';
   web3: any;
   // stableSwap
-  crvIbPool: any;
+  crvUSDCPool: any;
+  crvETHPool: any;
+  crvWBTCPool: any;
   // usdc reward token contract
   ib3CRV_GAUGE: any;
   usdc: any;
@@ -87,6 +90,7 @@ export class AppComponent {
     totalValue: 0,
     unclaimedCrv: 0,
     unclaimedTotalValue: 0,
+    crvVirtualPrice: 0,
   };
   fbETH_Balance = {
     wETH: 0,
@@ -95,6 +99,7 @@ export class AppComponent {
     totalValue: 0,
     unclaimedCrv: 0,
     uncalimedTotalValue: 0,
+    crvVirtualPrice: 0,
   };
   fbWBTC_Balance = {
     wBTC: 0,
@@ -103,12 +108,12 @@ export class AppComponent {
     totalValue: 0,
     unclaimedCrv: 0,
     hCrvGauge: 0,
+    crvVirtualPrice: 0,
   };
 
   ftUSDC_Balance = { usdc: 0, aum: 0 };
   ftWETH_Balance = { wETH: 0, aum: 0 };
   ftWBTC_Balance = { wBTC: 0, aum: 0 };
-  crvVirtualPrice = 0;
 
   // Params
   fbRebalanceToken: string = 'usdc';
@@ -181,12 +186,6 @@ export class AppComponent {
     this.farmBossETH = new this.web3.eth.Contract(farmBossETH, FarmBoss_ETH);
     this.farmBossWBTC = new this.web3.eth.Contract(farmBossWBTC, FarmBoss_WBTC);
 
-    // Create crvStableSwap contract
-    this.crvIbPool = new this.web3.eth.Contract(crvIbPool, CRV_IB_POOL);
-    const virtualPriceWei = await this.crvIbPool.methods
-      .get_virtual_price()
-      .call();
-    this.crvVirtualPrice = this.web3.utils.fromWei(virtualPriceWei);
     // Create ib3CRV_GAUGE, USDC, idle_USDC contract
 
     this.ib3CRV_GAUGE = new this.web3.eth.Contract(crvGauge, IB3CRV_GAUGE);
@@ -221,6 +220,15 @@ export class AppComponent {
     this.fbUSDC_Balance.unclaimedTotalValue =
       this.fbUSDC_Balance.unclaimedCrv * this.crvPrice;
 
+    // Create crvStableSwap contract
+    this.crvUSDCPool = new this.web3.eth.Contract(crvPool, CRV_IB_POOL);
+    const usdcVirtualPriceWei = await this.crvUSDCPool.methods
+      .get_virtual_price()
+      .call();
+    this.fbUSDC_Balance.crvVirtualPrice = this.web3.utils.fromWei(
+      usdcVirtualPriceWei
+    );
+
     // Get the balance of FarmBoss_ETH
     this.ibETH = new this.web3.eth.Contract(balanceABI, IBETH);
     const ibEthBalanceWei = await this.ibETH.methods
@@ -253,6 +261,14 @@ export class AppComponent {
       this.fbETH_Balance.ibETH * this.ibETHPrice +
       this.fbETH_Balance.eCRV_Gauge * this.ethPrice +
       this.fbETH_Balance.wETH * this.ethPrice;
+
+    this.crvETHPool = new this.web3.eth.Contract(crvPool, CRV_ETH_POOL);
+    const ethVirtualPriceWei = await this.crvETHPool.methods
+      .get_virtual_price()
+      .call();
+    this.fbETH_Balance.crvVirtualPrice = this.web3.utils.fromWei(
+      ethVirtualPriceWei
+    );
 
     // Get the balance of the FarmBossWBTC
     this.wBTC = new this.web3.eth.Contract(balanceABI, WBTC);
@@ -291,6 +307,13 @@ export class AppComponent {
       this.fbWBTC_Balance.wBTC * this.wBTCPrice +
       this.fbWBTC_Balance.hCrvGauge * this.wBTCPrice;
 
+    this.crvWBTCPool = new this.web3.eth.Contract(crvPool, CRV_WBTC_POOL);
+    const wbtcVirtualPriceWei = await this.crvWBTCPool.methods
+      .get_virtual_price()
+      .call();
+    this.fbWBTC_Balance.crvVirtualPrice = this.web3.utils.fromWei(
+      wbtcVirtualPriceWei
+    );
     // Get the FarmTreasuryUSDC's USDC balance
     const ftUSDCBalanceWei = await this.usdc.methods
       .balanceOf(FarmTreasury_USDC)

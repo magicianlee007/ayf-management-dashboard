@@ -1,7 +1,6 @@
 <div class="wrapper">
   <h1>Active Yield Fund Monitoring</h1>
   <!-- <button (click)="connectWallet()"> Connect Wallet</button> -->
-  <h3>Curve Virtual Price: {{ crvVirtualPrice | number: "1.4-4" }}</h3>
   <div class="cards">
     <div class="card">
       <a
@@ -30,6 +29,11 @@
         <h4>ib3CRV-gauge Balance:</h4>
         <h3 class="right">{{ fbUSDC_Balance.ib3CRV_Gauge }}</h3>
       </div>
+      <div class="item pink">
+        <h4>Curve Virtual Price:</h4>
+        <h3 class="right">{{ fbUSDC_Balance.crvVirtualPrice | number: "1.18-18" }}</h3>
+      </div>
+      
       <div class="item">
         <h4>Curve Balance(Unclaimed):</h4>
         <h3 class="right">{{ fbUSDC_Balance.unclaimedCrv }}</h3>
@@ -90,6 +94,10 @@
       <div class="item">
         <h4>eCRV-gauge Balance:</h4>
         <h3 class="right">{{ fbETH_Balance.eCRV_Gauge }}</h3>
+      </div>
+      <div class="item pink">
+        <h4>Curve Virtual Price:</h4>
+        <h3 class="right">{{ fbETH_Balance.crvVirtualPrice | number: "1.18-18" }}</h3>
       </div>
       <div class="item">
         <h4>Curve Balance(Unclaimed)</h4>
@@ -155,6 +163,10 @@
       <div class="item">
         <h4>hCRV-gauge Balance:</h4>
         <h3 class="right">{{ fbWBTC_Balance.hCrvGauge }}</h3>
+      </div>
+      <div class="item pink">
+        <h4>Curve Virtual Price:</h4>
+        <h3 class="right">{{ fbWBTC_Balance.crvVirtualPrice | number: "1.18-18" }}</h3>
       </div>
       <div class="item">
         <h4>Curve Balance(Unclaimed)</h4>
