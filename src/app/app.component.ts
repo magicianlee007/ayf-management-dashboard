@@ -29,6 +29,7 @@ import farmBossUSDC from '../constants/FarmBossUSDC.json';
 import farmBossETH from '../constants/FarmBossETH.json';
 import farmBossWBTC from '../constants/FarmBossWBTC.json';
 import detectEthereumProvider from '@metamask/detect-provider';
+import { createImportSpecifier } from 'typescript';
 
 let Web3: any;
 const COIN_PRICE_URL =
@@ -113,6 +114,9 @@ export class AppComponent {
   fbRebalanceToken: string = 'usdc';
   fbRebalanceAmount: string = '';
   fbRebalanceAddress: string = '';
+  fbSwapToken: string = 'usdc';
+  fbSwapCallData: string = '';
+  fbSwapIsSushi: string = 'sushi';
 
   constructor(private http: HttpClient, private gasService: GasPriceService) {
     if (!window['Web3']) {
@@ -366,34 +370,54 @@ export class AppComponent {
         const gasPrice = res['average'] / 10;
         await farmBossContract.methods
           .rebalanceUp(rebalanceAmountInWei, this.fbRebalanceAddress)
-          .send({
-            from: this.accounts[0],
-            gasPrice: this.web3.utils.toWei(gasPrice.toString(), 'gwei'),
-            gas: '500000',
-          })
-          .on('transactionHash', function (hash) {
-            console.log('==============Transaction Succeed=============');
-            console.log('TxHash', hash);
-            console.log('==============================================');
-          })
-          .on('receipt', function (receipt) {
-            console.log('=============Transaction Receipt=============');
-            console.log('Receipt', receipt);
-            console.log('=============================================');
-          })
-          .on('confirmation', function (confirmationNumber, receipt) {
-            console.log('==============Transaction Confirmation=============');
-            console.log('Confirmation Number', confirmationNumber);
-            console.log('Receipt', receipt);
-            console.log('===================================================');
-          })
-          .on('error', function (error, receipt) {
-            console.log('============Transaction Failed==============');
-            console.log('Confirmation Number', error);
-            console.log('Receipt', receipt);
-            console.log('============================================');
-          });
+          .call();
+        // .send({
+        //   from: this.accounts[0],
+        //   gasPrice: this.web3.utils.toWei(gasPrice.toString(), 'gwei'),
+        //   gas: '500000',
+        // })
+        // .on('transactionHash', function (hash) {
+        //   console.log('==============Transaction Succeed=============');
+        //   console.log('TxHash', hash);
+        //   console.log('==============================================');
+        // })
+        // .on('receipt', function (receipt) {
+        //   console.log('=============Transaction Receipt=============');
+        //   console.log('Receipt', receipt);
+        //   console.log('=============================================');
+        // })
+        // .on('confirmation', function (confirmationNumber, receipt) {
+        //   console.log('==============Transaction Confirmation=============');
+        //   console.log('Confirmation Number', confirmationNumber);
+        //   console.log('Receipt', receipt);
+        //   console.log('===================================================');
+        // })
+        // .on('error', function (error, receipt) {
+        //   console.log('============Transaction Failed==============');
+        //   console.log('Confirmation Number', error);
+        //   console.log('Receipt', receipt);
+        //   console.log('============================================');
+        // });
       });
+    }
+  }
+
+  async sellExactTokensForUnderlyingToken() {
+    console.log(this.fbSwapCallData, this.fbSwapIsSushi, this.fbSwapToken);
+    if (this.accounts.length > 0) {
+      let farmBossContract =
+        this.fbRebalanceToken === 'usdc'
+          ? this.farmBossUSDC
+          : this.fbRebalanceToken === 'eth'
+          ? this.farmBossETH
+          : this.farmBossWBTC;
+      console.log(this.web3.utils.toHex(parseInt(this.fbSwapCallData)));
+      await farmBossContract.methods
+        .sellExactTokensForUnderlyingToken(
+          this.web3.utils.toHex(parseInt(this.fbSwapCallData)),
+          this.fbSwapIsSushi === 'sushi'
+        )
+        .call();
     }
   }
 }

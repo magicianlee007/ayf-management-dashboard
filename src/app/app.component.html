@@ -176,7 +176,11 @@
     <div class="card">
       <h3>Rebalance</h3>
       <div class="item">
-        <select id="cars" name="cars" [(ngModel)]="fbRebalanceToken">
+        <select
+          id="rebalanceToken"
+          name="rebalanceToken"
+          [(ngModel)]="fbRebalanceToken"
+        >
           <option value="usdc">USDC</option>
           <option value="eth">ETH</option>
           <option value="wbtc">WBTC</option>
@@ -185,10 +189,32 @@
         <input placeholder="Address" [(ngModel)]="fbRebalanceAddress" />
       </div>
       <div class="item">
-      <button (click)="rebalance()">Rebalance</button>
+        <button (click)="rebalance()">Rebalance</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Rebalance</h3>
+      <div class="item">
+        <select id="swapToken" name="swapToken" [(ngModel)]="fbSwapToken">
+          <option value="usdc">USDC</option>
+          <option value="eth">ETH</option>
+          <option value="wbtc">WBTC</option>
+        </select>
+        <input placeholder="Amount" [(ngModel)]="fbSwapCallData" />
+        <select id="cars" name="cars" [(ngModel)]="fbSwapIsSushi">
+          <option value="sushi">SUSHI</option>
+          <option value="no-sushi">No-SUSHI</option>
+        </select>
+      </div>
+      <div class="item">
+        <button (click)="sellExactTokensForUnderlyingToken()">
+          sellExactTokensForUnderlyingToken
+        </button>
+      </div>
     </div>
   </div>
-  </div>
+
   <div class="cards">
     <div class="treasury_card card">
       <a
@@ -263,5 +289,5 @@
       </div>
     </div>
   </div>
+  <router-outlet></router-outlet>
 </div>
-<router-outlet></router-outlet>
