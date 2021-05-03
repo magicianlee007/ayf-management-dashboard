@@ -1,0 +1,341 @@
+<div class="wrapper">
+  <h1>Active Yield Fund Monitoring(ETH Mainnet)</h1>
+  <!-- <button (click)="connectWallet()"> Connect Wallet</button> -->
+  <div class="cards">
+    <div class="card">
+      <a
+        href="https://etherscan.io/address/0xfB2Ccc29e312554bc264cB83497A7137c1532e2f"
+        target="_blank"
+      >
+        <h2>FarmBossUSDC</h2>
+      </a>
+      <div class="item">
+        <h4>USDC Balance:</h4>
+        <h3 class="right">{{ fbUSDC_Balance.usdc }}</h3>
+      </div>
+      <div class="item">
+        <a href="https://curve.fi/ib" target="_blank">
+          <h4>CurveFinance Strategy:</h4>
+        </a>
+        <h3 class="right" *ngIf="fbUSDC_Balance.totalValue > 0">
+          {{
+            (fbUSDC_Balance.ib3CRV_Gauge / fbUSDC_Balance.totalValue) * 100
+              | number: "1.2-2"
+          }}%
+        </h3>
+        <h3 class="right" *ngIf="fbUSDC_Balance.totalValue === 0">0%</h3>
+      </div>
+      <div class="item">
+        <h4>ib3CRV-gauge Balance:</h4>
+        <h3 class="right">{{ fbUSDC_Balance.ib3CRV_Gauge }}</h3>
+      </div>
+      <div class="item pink">
+        <a
+          href="https://etherscan.io/address/0x2dded6da1bf5dbdf597c45fcfaa3194e53ecfeaf#readContract"
+          target="_blank"
+        >
+          <h4>Curve Virtual Price:</h4>
+        </a>
+        <h3 class="right">
+          {{ fbUSDC_Balance.crvVirtualPrice | number: "1.18-18" }}
+        </h3>
+      </div>
+
+      <div class="item">
+        <h4>Curve Balance(Unclaimed):</h4>
+        <h3 class="right">{{ fbUSDC_Balance.unclaimedCrv }}</h3>
+      </div>
+      <div class="item">
+        <h4>Total Value:</h4>
+        <h2 class="right">
+          {{ fbUSDC_Balance.totalValue.toLocaleString() }} USD
+        </h2>
+      </div>
+      <div class="item">
+        <h4>Total Value(Unclaimed):</h4>
+        <h2 class="right">
+          {{ fbUSDC_Balance.unclaimedTotalValue.toLocaleString() }} USD
+        </h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <a
+        href="https://etherscan.io/address/0x7B4a6b798f803512fc53ed656fBc510F022389E5"
+        target="_blank"
+      >
+        <h2>FarmBossETH</h2>
+      </a>
+      <div class="item">
+        <h4>WETH Balance:</h4>
+        <h3 class="right">{{ fbETH_Balance.wETH }}</h3>
+      </div>
+      <div class="item">
+        <a href="https://homora.alphafinance.io/earn" target="_blank">
+          <h4>AlphaFinance Strategy:</h4>
+        </a>
+        <h3 class="right" *ngIf="fbETH_Balance.totalValue > 0">
+          {{
+            ((fbETH_Balance.ibETH * ethPrice) / fbETH_Balance.totalValue) * 100
+              | number: "1.2-2"
+          }}%
+        </h3>
+        <h3 class="right" *ngIf="fbETH_Balance.totalValue === 0">0%</h3>
+      </div>
+      <div class="item">
+        <h4>IBETH Balance:</h4>
+        <h3 class="right">{{ fbETH_Balance.ibETH }}</h3>
+      </div>
+      <div class="item">
+        <a href="https://dao.curve.fi/" target="_blank">
+          <h4>CurveFinance Strategy:</h4>
+        </a>
+        <h3 class="right" *ngIf="fbETH_Balance.totalValue > 0">
+          {{
+            ((fbETH_Balance.eCRV_Gauge * ethPrice) / fbETH_Balance.totalValue) *
+              100 | number: "1.2-2"
+          }}%
+        </h3>
+        <h3 class="right" *ngIf="fbETH_Balance.totalValue === 0">0%</h3>
+      </div>
+      <div class="item">
+        <h4>eCRV-gauge Balance:</h4>
+        <h3 class="right">{{ fbETH_Balance.eCRV_Gauge }}</h3>
+      </div>
+      <div class="item pink">
+        <a
+          href="https://etherscan.io/address/0xc5424B857f758E906013F3555Dad202e4bdB4567#readContract"
+          target="_blank"
+        >
+          <h4>Curve Virtual Price:</h4>
+        </a>
+        <h3 class="right">
+          {{ fbETH_Balance.crvVirtualPrice | number: "1.18-18" }}
+        </h3>
+      </div>
+      <div class="item">
+        <h4>Curve Balance(Unclaimed)</h4>
+        <h3 class="right">{{ fbETH_Balance.unclaimedCrv }}</h3>
+      </div>
+      <div class="item">
+        <h4>Total Value:</h4>
+        <h2 class="right">
+          {{ fbETH_Balance.totalValue.toLocaleString() }} USD
+        </h2>
+      </div>
+      <div class="item">
+        <h4>Total ETH value:</h4>
+        <h2 class="right">{{ fbETH_Balance.totalValue / ethPrice }} ETH</h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <a
+        href="https://etherscan.io/address/0xCbAb999b25850c6530bcA365e5005702CB6Bf006"
+        target="_blank"
+      >
+        <h2>FarmBossWBTC</h2>
+      </a>
+      <div class="item">
+        <h4>WBTC Balance:</h4>
+        <h3 class="right">{{ fbWBTC_Balance.wBTC }}</h3>
+      </div>
+      <div class="item">
+        <a href="https://app.compound.finance/" target="_blank">
+          <h4>Compound Strategy:</h4>
+        </a>
+        <h3 class="right" *ngIf="fbETH_Balance.totalValue > 0">
+          {{
+            ((fbWBTC_Balance.compound_WBTC * compoundBTCPrice) /
+              fbWBTC_Balance.totalValue) *
+              100 | number: "1.2-2"
+          }}%
+        </h3>
+        <h3 class="right" *ngIf="fbWBTC_Balance.totalValue === 0">0%</h3>
+      </div>
+      <div class="item">
+        <h4>Compound WBTC Balance:</h4>
+        <h3 class="right">{{ fbWBTC_Balance.compound_WBTC }}</h3>
+      </div>
+      <div class="item">
+        <h4>stackETH Balance:</h4>
+        <h3 class="right">{{ fbWBTC_Balance.stack_ETH }}</h3>
+      </div>
+      <div class="item">
+        <a href="https://dao.curve.fi/" target="_blank">
+          <h4>CurveFinance Strategy:</h4>
+        </a>
+        <h3 class="right" *ngIf="fbETH_Balance.totalValue > 0">
+          {{
+            ((fbWBTC_Balance.hCrvGauge * wBTCPrice) /
+              fbWBTC_Balance.totalValue) *
+              100 | number: "1.2-2"
+          }}%
+        </h3>
+        <h3 class="right" *ngIf="fbWBTC_Balance.totalValue === 0">0%</h3>
+      </div>
+      <div class="item">
+        <h4>hCRV-gauge Balance:</h4>
+        <h3 class="right">{{ fbWBTC_Balance.hCrvGauge }}</h3>
+      </div>
+      <div class="item pink">
+        <a
+          href="https://etherscan.io/address/0x7fC77b5c7614E1533320Ea6DDc2Eb61fa00A9714#readContract"
+          target="_blank"
+        >
+          <h4>Curve Virtual Price:</h4>
+        </a>
+        <h3 class="right">
+          {{ fbWBTC_Balance.crvVirtualPrice | number: "1.18-18" }}
+        </h3>
+      </div>
+      <div class="item">
+        <h4>Curve Balance(Unclaimed)</h4>
+        <h3 class="right">{{ fbWBTC_Balance.unclaimedCrv }}</h3>
+      </div>
+      <div class="item">
+        <h4>Total Value:</h4>
+        <h2 class="right">
+          {{ fbWBTC_Balance.totalValue.toLocaleString() }} USD
+        </h2>
+      </div>
+      <div class="item">
+        <h4>Total in WBTC:</h4>
+        <h2 class="right">{{ fbWBTC_Balance.totalValue / wBTCPrice }} WBTC</h2>
+      </div>
+    </div>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <h3>Rebalance</h3>
+      <div class="item">
+        <select
+          id="rebalanceToken"
+          name="rebalanceToken"
+          [(ngModel)]="fbRebalanceToken"
+        >
+          <option value="usdc">USDC</option>
+          <option value="eth">ETH</option>
+          <option value="wbtc">WBTC</option>
+        </select>
+        <input placeholder="Amount" [(ngModel)]="fbRebalanceAmount" />
+        <input placeholder="Address" [(ngModel)]="fbRebalanceAddress" />
+      </div>
+      <div class="item">
+        <button (click)="rebalance()">Rebalance</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>sellExactTokensForUnderlyingToken</h3>
+      <div class="item">
+        <select id="swapToken" name="swapToken" [(ngModel)]="fbSwapToken">
+          <option value="usdc">USDC</option>
+          <option value="eth">ETH</option>
+          <option value="wbtc">WBTC</option>
+        </select>
+        <input placeholder="Call Data" [(ngModel)]="fbSwapCallData" />
+        <select id="isSushi" name="isSushi" [(ngModel)]="fbSwapIsSushi">
+          <option value="sushi">SUSHI</option>
+          <option value="no-sushi">No-SUSHI</option>
+        </select>
+      </div>
+      <div class="item">
+        <button (click)="sellExactTokensForUnderlyingToken()">
+          sellExactTokensForUnderlyingToken
+        </button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>farmerExecute</h3>
+      <div class="item">
+        <select id="swapToken" name="swapToken" [(ngModel)]="fbExecuteToken">
+          <option value="usdc">USDC</option>
+          <option value="eth">ETH</option>
+          <option value="wbtc">WBTC</option>
+        </select>
+        <input placeholder="Address" [(ngModel)]="fbExecuteAddress" />
+        <input placeholder="Amount" [(ngModel)]="fbExecuteAmount" />
+        <input placeholder="Call Data" [(ngModel)]="fbExecuteCallData" />
+      </div>
+      <div class="item">
+        <button (click)="farmerExecute()">farmerExecute</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="treasury_card card">
+      <a
+        href="https://etherscan.io/address/0x067b9FE006E16f52BBf647aB6799f87566480D2c"
+        target="_blank"
+      >
+        <h2>FarmTreasuryUSDC</h2>
+      </a>
+      <div class="item">
+        <h4>USDC Balance:</h4>
+        <h3 class="right">{{ ftUSDC_Balance.usdc }}</h3>
+      </div>
+      <div class="item">
+        <h3 class="right" *ngIf="ftUSDC_Balance.aum > 0">
+          {{
+            (ftUSDC_Balance.usdc / ftUSDC_Balance.aum) * 100 | number: "1.2-2"
+          }}%
+        </h3>
+        <h3 class="right" *ngIf="ftUSDC_Balance.aum === 0">0%</h3>
+      </div>
+      <div class="item">
+        <h4>AUM Balance:</h4>
+        <h3 class="right">{{ ftUSDC_Balance.aum }}</h3>
+      </div>
+    </div>
+    <div class="treasury_card card">
+      <a
+        href="https://etherscan.io/address/0x70e51DFc7A9FC391995C2B2f027BC49D4fe01577"
+        target="_blank"
+      >
+        <h2>FarmTreasuryETH</h2>
+      </a>
+      <div class="item">
+        <h4>WETH Balance:</h4>
+        <h3 class="right">{{ ftWETH_Balance.wETH }}</h3>
+      </div>
+      <div class="item">
+        <h3 class="right" *ngIf="ftWETH_Balance.aum > 0">
+          {{
+            (ftWETH_Balance.wETH / ftWETH_Balance.aum) * 100 | number: "1.2-2"
+          }}%
+        </h3>
+        <h3 class="right" *ngIf="ftWETH_Balance.aum === 0">0 %</h3>
+      </div>
+      <div class="item">
+        <h4>AUM Balance:</h4>
+        <h3 class="right">{{ ftWETH_Balance.aum }}</h3>
+      </div>
+    </div>
+    <div class="treasury_card card">
+      <a
+        href="https://etherscan.io/address/0x17E9ed51feD2F190D50f5bd4f1a8C9CbCd36162A"
+        target="_blank"
+      >
+        <h2>FarmTreasuryWBTC</h2>
+      </a>
+      <div class="item">
+        <h4>WBTC Balance:</h4>
+        <h3 class="right">{{ ftWBTC_Balance.wBTC }}</h3>
+      </div>
+      <div class="item">
+        <h3 class="right" *ngIf="ftWBTC_Balance.aum > 0">
+          {{
+            (ftWBTC_Balance.wBTC / ftWBTC_Balance.aum) * 100 | number: "1.2-2"
+          }}%
+        </h3>
+        <h3 class="right" *ngIf="ftWBTC_Balance.aum === 0">0%</h3>
+      </div>
+      <div class="item">
+        <h4>AUM Balance:</h4>
+        <h3 class="right">{{ ftWBTC_Balance.aum }}</h3>
+      </div>
+    </div>
+  </div>
+</div>

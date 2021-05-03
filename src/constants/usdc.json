@@ -264,21 +264,7 @@
   { "anonymous": false, "inputs": [], "name": "Unpause", "type": "event" },
   {
     "inputs": [],
-    "name": "APPROVE_WITH_AUTHORIZATION_TYPEHASH",
-    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "CANCEL_AUTHORIZATION_TYPEHASH",
-    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "DECREASE_ALLOWANCE_WITH_AUTHORIZATION_TYPEHASH",
     "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
     "stateMutability": "view",
     "type": "function"
@@ -292,14 +278,14 @@
   },
   {
     "inputs": [],
-    "name": "INCREASE_ALLOWANCE_WITH_AUTHORIZATION_TYPEHASH",
+    "name": "PERMIT_TYPEHASH",
     "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "PERMIT_TYPEHASH",
+    "name": "RECEIVE_WITH_AUTHORIZATION_TYPEHASH",
     "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
     "stateMutability": "view",
     "type": "function"
@@ -333,34 +319,11 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "owner", "type": "address" },
-      { "internalType": "address", "name": "spender", "type": "address" },
-      { "internalType": "uint256", "name": "value", "type": "uint256" },
-      { "internalType": "uint256", "name": "validAfter", "type": "uint256" },
-      { "internalType": "uint256", "name": "validBefore", "type": "uint256" },
-      { "internalType": "bytes32", "name": "nonce", "type": "bytes32" },
-      { "internalType": "uint8", "name": "v", "type": "uint8" },
-      { "internalType": "bytes32", "name": "r", "type": "bytes32" },
-      { "internalType": "bytes32", "name": "s", "type": "bytes32" }
-    ],
-    "name": "approveWithAuthorization",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
       { "internalType": "address", "name": "authorizer", "type": "address" },
       { "internalType": "bytes32", "name": "nonce", "type": "bytes32" }
     ],
     "name": "authorizationState",
-    "outputs": [
-      {
-        "internalType": "enum GasAbstraction.AuthorizationState",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -451,45 +414,11 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "owner", "type": "address" },
-      { "internalType": "address", "name": "spender", "type": "address" },
-      { "internalType": "uint256", "name": "decrement", "type": "uint256" },
-      { "internalType": "uint256", "name": "validAfter", "type": "uint256" },
-      { "internalType": "uint256", "name": "validBefore", "type": "uint256" },
-      { "internalType": "bytes32", "name": "nonce", "type": "bytes32" },
-      { "internalType": "uint8", "name": "v", "type": "uint8" },
-      { "internalType": "bytes32", "name": "r", "type": "bytes32" },
-      { "internalType": "bytes32", "name": "s", "type": "bytes32" }
-    ],
-    "name": "decreaseAllowanceWithAuthorization",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
       { "internalType": "address", "name": "spender", "type": "address" },
       { "internalType": "uint256", "name": "increment", "type": "uint256" }
     ],
     "name": "increaseAllowance",
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "owner", "type": "address" },
-      { "internalType": "address", "name": "spender", "type": "address" },
-      { "internalType": "uint256", "name": "increment", "type": "uint256" },
-      { "internalType": "uint256", "name": "validAfter", "type": "uint256" },
-      { "internalType": "uint256", "name": "validBefore", "type": "uint256" },
-      { "internalType": "bytes32", "name": "nonce", "type": "bytes32" },
-      { "internalType": "uint8", "name": "v", "type": "uint8" },
-      { "internalType": "bytes32", "name": "r", "type": "bytes32" },
-      { "internalType": "bytes32", "name": "s", "type": "bytes32" }
-    ],
-    "name": "increaseAllowanceWithAuthorization",
-    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -522,6 +451,15 @@
       { "internalType": "string", "name": "newName", "type": "string" }
     ],
     "name": "initializeV2",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "lostAndFound", "type": "address" }
+    ],
+    "name": "initializeV2_1",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -625,6 +563,23 @@
       { "internalType": "bytes32", "name": "s", "type": "bytes32" }
     ],
     "name": "permit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "from", "type": "address" },
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint256", "name": "value", "type": "uint256" },
+      { "internalType": "uint256", "name": "validAfter", "type": "uint256" },
+      { "internalType": "uint256", "name": "validBefore", "type": "uint256" },
+      { "internalType": "bytes32", "name": "nonce", "type": "bytes32" },
+      { "internalType": "uint8", "name": "v", "type": "uint8" },
+      { "internalType": "bytes32", "name": "r", "type": "bytes32" },
+      { "internalType": "bytes32", "name": "s", "type": "bytes32" }
+    ],
+    "name": "receiveWithAuthorization",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -779,6 +734,13 @@
     "name": "updateRescuer",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "version",
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "stateMutability": "view",
     "type": "function"
   }
 ]

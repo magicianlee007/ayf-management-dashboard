@@ -6,8 +6,10 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { GasPriceService } from './services/gas-price/gas-price.service';
+import { MaticComponent } from './matic/matic.component';
+import { EthComponent } from './eth/eth.component';
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, MaticComponent, EthComponent],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule],
   providers: [GasPriceService],
   bootstrap: [AppComponent],
