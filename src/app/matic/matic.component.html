@@ -1,0 +1,62 @@
+<div class="wrapper">
+  <h1>Active Yield Fund Monitoring (Matic Mainnet)</h1>
+  <!-- <button (click)="connectWallet()"> Connect Wallet</button> -->
+  <div class="cards">
+    <div class="card">
+      <a
+        href="https://explorer-mainnet.maticvigil.com/address/0xDE762D1c39dD3362C9401398935148D204bb1813"
+        target="_blank"
+      >
+        <h2>FarmBossUSDC</h2>
+      </a>
+      <div class="item">
+        <h4>USDC Balance:</h4>
+        <h3 class="right">{{ fbUSDC_Balance.usdc }}</h3>
+      </div>
+      <div class="item">
+        <a href="https://polygon.curve.fi/aave" target="_blank">
+          <h4>CurveFinance Strategy:</h4>
+        </a>
+        <h3 class="right" *ngIf="fbUSDC_Balance.totalValue > 0">
+          {{
+            (fbUSDC_Balance.amGaugeUSDC / fbUSDC_Balance.totalValue) * 100
+              | number: "1.2-2"
+          }}%
+        </h3>
+        <h3 class="right" *ngIf="fbUSDC_Balance.totalValue === 0">0%</h3>
+      </div>
+      <div class="item">
+        <h4>Curve AAVE Gauge Balance:</h4>
+        <h3 class="right">{{ fbUSDC_Balance.amGaugeUSDC }}</h3>
+      </div>
+      <div class="item pink">
+        <a
+          href="https://etherscan.io/address/0x2dded6da1bf5dbdf597c45fcfaa3194e53ecfeaf#readContract"
+          target="_blank"
+        >
+          <h4>Curve Virtual Price:</h4>
+        </a>
+        <h3 class="right">
+          {{ fbUSDC_Balance.crvVirtualPrice | number: "1.18-18" }}
+        </h3>
+      </div>
+
+      <div class="item">
+        <h4>WMATIC Balance(Unclaimed):</h4>
+        <h3 class="right">{{ fbUSDC_Balance.unclaimedWMatic }}</h3>
+      </div>
+      <div class="item">
+        <h4>Total Value:</h4>
+        <h2 class="right">
+          {{ fbUSDC_Balance.totalValue.toLocaleString() }} USD
+        </h2>
+      </div>
+      <div class="item">
+        <h4>Total Value(Unclaimed):</h4>
+        <h2 class="right">
+          {{ fbUSDC_Balance.unclaimedTotalValue.toLocaleString() }} USD
+        </h2>
+      </div>
+    </div>
+  </div>
+</div>
