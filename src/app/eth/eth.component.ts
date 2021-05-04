@@ -133,10 +133,10 @@ export class EthComponent {
       this.injectScript();
     } else {
       this.generateProvider();
+      this.initContract();
     }
   }
   ngOnInit() {
-    console.log('ng on init');
     this.http.get(COIN_PRICE_URL).subscribe((res) => {
       this.ethPrice = res['ethereum']['usd'];
       this.wBTCPrice = res['wrapped-bitcoin']['usd'];
@@ -175,6 +175,7 @@ export class EthComponent {
     console.log('Web3 Generated', this.web3);
   }
   async onSuccess() {
+    console.log('success loading script');
     await this.generateProvider();
     this.initContract();
   }
@@ -182,6 +183,7 @@ export class EthComponent {
     console.error('web3 error injected');
   }
   async initContract() {
+    console.log('init contract');
     // Create FarmBoss Contract
     this.farmBossUSDC = new this.web3.eth.Contract(farmBossUSDC, FarmBoss_USDC);
     this.farmBossETH = new this.web3.eth.Contract(farmBossETH, FarmBoss_ETH);

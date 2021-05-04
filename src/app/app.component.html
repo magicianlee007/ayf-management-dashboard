@@ -1,3 +1,9 @@
 <div>
-  <router-outlet></router-outlet>
+  <div class="header">
+    <a routerLink="/eth" routerLinkActive="active"><span>ETH</span></a>
+    <a routerLink="/matic" routerLinkActive="active"><span>Matic</span></a>
+  </div>
+  <div class="body-wrapper">
+    <router-outlet></router-outlet>
+  </div>
 </div>
