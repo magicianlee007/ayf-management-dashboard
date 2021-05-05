@@ -54,6 +54,66 @@
       </div>
     </div>
   </div>
+
+  <div class="cards">
+    <div class="card">
+      <h3>Rebalance</h3>
+      <div class="item">
+        <select
+          id="rebalanceToken"
+          name="rebalanceToken"
+          [(ngModel)]="fbRebalanceToken"
+        >
+          <option value="usdc">USDC</option>
+          <!-- <option value="eth">ETH</option>
+          <option value="wbtc">WBTC</option> -->
+        </select>
+        <input placeholder="Amount" [(ngModel)]="fbRebalanceAmount" />
+        <input placeholder="Address" [(ngModel)]="fbRebalanceAddress" />
+      </div>
+      <div class="item">
+        <button (click)="rebalance()">Rebalance</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>sellExactTokensForUnderlyingToken</h3>
+      <div class="item">
+        <select id="swapToken" name="swapToken" [(ngModel)]="fbSwapToken">
+          <option value="usdc">USDC</option>
+          <!-- <option value="eth">ETH</option>
+          <option value="wbtc">WBTC</option> -->
+        </select>
+        <input placeholder="Call Data" [(ngModel)]="fbSwapCallData" />
+        <select id="isSushi" name="isSushi" [(ngModel)]="fbSwapIsSushi">
+          <option value="sushi">SUSHI</option>
+          <option value="no-sushi">No-SUSHI</option>
+        </select>
+      </div>
+      <div class="item">
+        <button (click)="sellExactTokensForUnderlyingToken()">
+          sellExactTokensForUnderlyingToken
+        </button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>farmerExecute</h3>
+      <div class="item">
+        <select id="swapToken" name="swapToken" [(ngModel)]="fbExecuteToken">
+          <option value="usdc">USDC</option>
+          <!-- <option value="eth">ETH</option>
+          <option value="wbtc">WBTC</option> -->
+        </select>
+        <input placeholder="Address" [(ngModel)]="fbExecuteAddress" />
+        <input placeholder="Amount" [(ngModel)]="fbExecuteAmount" />
+        <input placeholder="Call Data" [(ngModel)]="fbExecuteCallData" />
+      </div>
+      <div class="item">
+        <button (click)="farmerExecute()">farmerExecute</button>
+      </div>
+    </div>
+  </div>
+
   <div class="cards">
     <div class="treasury_card card">
       <a
