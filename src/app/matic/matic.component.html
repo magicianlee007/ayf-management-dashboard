@@ -54,4 +54,30 @@
       </div>
     </div>
   </div>
+  <div class="cards">
+    <div class="treasury_card card">
+      <a
+        href="https://explorer-mainnet.maticvigil.com/address/0x8De755d4B198a1b1b79CE22239Bc83FfF7c73553/transactions"
+        target="_blank"
+      >
+        <h2>FarmTreasuryUSDC</h2>
+      </a>
+      <div class="item">
+        <h4>USDC Balance:</h4>
+        <h3 class="right">{{ ftUSDC_Balance.usdc }}</h3>
+      </div>
+      <div class="item">
+        <h3 class="right" *ngIf="ftUSDC_Balance.aum > 0">
+          {{
+            (ftUSDC_Balance.usdc / ftUSDC_Balance.aum) * 100 | number: "1.2-2"
+          }}%
+        </h3>
+        <h3 class="right" *ngIf="ftUSDC_Balance.aum === 0">0%</h3>
+      </div>
+      <div class="item">
+        <h4>AUM Balance:</h4>
+        <h3 class="right">{{ ftUSDC_Balance.aum }}</h3>
+      </div>
+    </div>
+  </div>
 </div>

@@ -12,6 +12,7 @@ import {
   MATIC_CURVE_WMATIC,
 } from '../../constants/contractAddresses';
 import farmBossUSDCAbi from '../../constants/FarmBossUSDC.json';
+import farmTreasuryAbi from '../../constants/FarmTreasury.json';
 import usdcAbi from '../../constants/usdc.json';
 import balanceAbi from '../../constants/BalanceOfABI.json';
 import crvGaugeAbi from '../../constants/maticCrvGauge.json';
@@ -35,7 +36,8 @@ export class MaticComponent implements OnInit {
   amUSDC: any;
   curveAAVEPool: any;
   curveAAVEGaugePool: any;
-  //FarmBossUSDC
+
+  // FarmBossUSDC
   fbUSDC_Contract: any;
   fbUSDC_Balance = {
     usdc: 0,
@@ -45,6 +47,9 @@ export class MaticComponent implements OnInit {
     unclaimedTotalValue: 0,
     crvVirtualPrice: 0,
   };
+  // FarmTreasuryUSDC
+  ftUSDC_Contract: any;
+  ftUSDC_Balance = { usdc: 0, aum: 0 };
 
   // coin price
   wMaticPrice = 0;
@@ -143,5 +148,23 @@ export class MaticComponent implements OnInit {
 
     this.fbUSDC_Balance.unclaimedTotalValue =
       this.fbUSDC_Balance.unclaimedWMatic * this.wMaticPrice;
+
+    // FarmTreasury Contract Creation
+    const ftUSDCBalanceWei = await this.usdc.methods
+      .balanceOf(MATIC_FARM_TREASURY_USDC)
+      .call();
+    this.ftUSDC_Balance.usdc = parseFloat(
+      this.web3.utils.fromWei(ftUSDCBalanceWei, 'mwei')
+    );
+    this.ftUSDC_Contract = new this.web3.eth.Contract(
+      farmTreasuryAbi,
+      MATIC_FARM_TREASURY_USDC
+    );
+    const ftUSDCAUMBalanceWei = await this.ftUSDC_Contract.methods
+      .totalUnderlying()
+      .call();
+    this.ftUSDC_Balance.aum = parseFloat(
+      this.web3.utils.fromWei(ftUSDCAUMBalanceWei, 'mwei')
+    );
   }
 }
