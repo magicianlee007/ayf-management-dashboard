@@ -1,11 +1,9 @@
 .wrapper {
-  width: 100vw;
   max-height: 100%;
   overflow-y: auto;
   background: #5a32e4;
-  position: fixed;
   padding: 16px;
-
+  box-sizing: border-box;
   .cards {
     display: flex;
     margin-bottom: 20px;
