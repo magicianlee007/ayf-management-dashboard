@@ -6,7 +6,7 @@ import {
   IB3CRV_GAUGE,
   USDC,
   FarmBoss_USDC,
-  IBETH,
+  SETH,
   WETH,
   ECRV_GAUGE,
   FarmBoss_ETH,
@@ -25,6 +25,7 @@ import {
 import crvGauge from '../../constants/crvGauge.json';
 import usdc from '../../constants/usdc.json';
 import balanceABI from '../../constants/BalanceOfABI.json';
+import yVaultABI from '../../constants/yVault.json';
 import farmTreasury from '../../constants/FarmTreasury.json';
 import crvPool from '../../constants/crvPool.json';
 import farmBossUSDC from '../../constants/FarmBossUSDC.json';
@@ -53,7 +54,7 @@ export class EthComponent {
   usdc: any;
 
   // eth reward token contract
-  ibETH: any;
+  sETH: any;
   wETH: any;
   eCRV_GAUGE: any;
 
@@ -95,12 +96,14 @@ export class EthComponent {
   };
   fbETH_Balance = {
     wETH: 0,
+    sETH: 0,
     eCRV_Gauge: 0,
-    ibETH: 0,
     totalValue: 0,
     unclaimedCrv: 0,
     uncalimedTotalValue: 0,
     crvVirtualPrice: 0,
+    pricePerShare: 0,
+    totalAssets: 0,
   };
   fbWBTC_Balance = {
     wBTC: 0,
@@ -231,34 +234,28 @@ export class EthComponent {
       this.web3.utils.fromWei(usdcVirtualPriceWei);
 
     // Get the balance of FarmBoss_ETH
-    this.ibETH = new this.web3.eth.Contract(balanceABI, IBETH);
-    const ibEthBalanceWei = await this.ibETH.methods
-      .balanceOf(FarmBoss_ETH)
-      .call();
-    this.fbETH_Balance.ibETH = this.web3.utils.fromWei(ibEthBalanceWei);
-
     this.wETH = new this.web3.eth.Contract(balanceABI, WETH);
     const wEthBalanceWei = await this.wETH.methods
       .balanceOf(FarmBoss_ETH)
       .call();
     this.fbETH_Balance.wETH = this.web3.utils.fromWei(wEthBalanceWei);
 
-    this.eCRV_GAUGE = new this.web3.eth.Contract(crvGauge, ECRV_GAUGE);
-    const eCrvGaugeBalanceWei = await this.eCRV_GAUGE.methods
+    this.sETH = new this.web3.eth.Contract(yVaultABI, SETH);
+    const sEthBalanceWei = await this.sETH.methods
       .balanceOf(FarmBoss_ETH)
       .call();
-    this.fbETH_Balance.eCRV_Gauge =
-      this.web3.utils.fromWei(eCrvGaugeBalanceWei);
+    this.fbETH_Balance.sETH = this.web3.utils.fromWei(sEthBalanceWei);
 
-    const unclaimedCrvEthWei = await this.eCRV_GAUGE.methods
-      .claimable_tokens(FarmBoss_ETH)
-      .call();
-    this.fbETH_Balance.unclaimedCrv =
-      this.web3.utils.fromWei(unclaimedCrvEthWei);
+    const totalSupplyWei = await this.sETH.methods.totalSupply().call();
+
+    this.fbETH_Balance.totalAssets = this.web3.utils.fromWei(totalSupplyWei);
+
+    const pricePerShareWei = await this.sETH.methods.pricePerShare().call();
+    this.fbETH_Balance.pricePerShare =
+      this.web3.utils.fromWei(pricePerShareWei);
 
     this.fbETH_Balance.totalValue =
-      this.fbETH_Balance.ibETH * this.ibETHPrice +
-      this.fbETH_Balance.eCRV_Gauge * this.ethPrice +
+      this.fbETH_Balance.sETH * this.ethPrice +
       this.fbETH_Balance.wETH * this.ethPrice;
 
     this.crvETHPool = new this.web3.eth.Contract(crvPool, CRV_ETH_POOL);

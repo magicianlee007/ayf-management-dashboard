@@ -4,7 +4,7 @@ export const IB3CRV_GAUGE = '0xf5194c3325202f456c95c1cf0ca36f8475c1949f';
 export const USDC = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48';
 
 // ETH Rewards Token
-export const IBETH = '0x67B66C99D3Eb37Fa76Aa3Ed1ff33E8e39F0b9c7A';
+export const SETH = '0x986b4aff588a109c09b50a03f42e4110e29d353f';
 export const WETH = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2';
 export const ECRV_GAUGE = '0x3c0ffff15ea30c35d7a85b85c0782d6c94e1d238';
 

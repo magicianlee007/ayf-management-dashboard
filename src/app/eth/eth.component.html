@@ -70,52 +70,22 @@
         <h4>WETH Balance:</h4>
         <h3 class="right">{{ fbETH_Balance.wETH }}</h3>
       </div>
+
       <div class="item">
-        <a href="https://homora.alphafinance.io/earn" target="_blank">
-          <h4>AlphaFinance Strategy:</h4>
-        </a>
-        <h3 class="right" *ngIf="fbETH_Balance.totalValue > 0">
-          {{
-            ((fbETH_Balance.ibETH * ethPrice) / fbETH_Balance.totalValue) * 100
-              | number: "1.2-2"
-          }}%
-        </h3>
-        <h3 class="right" *ngIf="fbETH_Balance.totalValue === 0">0%</h3>
+        <h4>yvCurve-sETH Balance:</h4>
+        <h3 class="right">{{ fbETH_Balance.sETH }}</h3>
       </div>
       <div class="item">
-        <h4>IBETH Balance:</h4>
-        <h3 class="right">{{ fbETH_Balance.ibETH }}</h3>
+        <h4>Number of yToken:</h4>
+        <h3 class="right">{{ fbETH_Balance.totalAssets }}</h3>
       </div>
       <div class="item">
-        <a href="https://dao.curve.fi/" target="_blank">
-          <h4>CurveFinance Strategy:</h4>
-        </a>
-        <h3 class="right" *ngIf="fbETH_Balance.totalValue > 0">
-          {{
-            ((fbETH_Balance.eCRV_Gauge * ethPrice) / fbETH_Balance.totalValue) *
-              100 | number: "1.2-2"
-          }}%
-        </h3>
-        <h3 class="right" *ngIf="fbETH_Balance.totalValue === 0">0%</h3>
-      </div>
-      <div class="item">
-        <h4>eCRV-gauge Balance:</h4>
-        <h3 class="right">{{ fbETH_Balance.eCRV_Gauge }}</h3>
+        <h4>Total Deposit sETH:</h4>
+        <h3 class="right">{{ fbETH_Balance.sETH * fbETH_Balance.pricePerShare }}</h3>
       </div>
       <div class="item pink">
-        <a
-          href="https://etherscan.io/address/0xc5424B857f758E906013F3555Dad202e4bdB4567#readContract"
-          target="_blank"
-        >
-          <h4>Curve Virtual Price:</h4>
-        </a>
-        <h3 class="right">
-          {{ fbETH_Balance.crvVirtualPrice | number: "1.18-18" }}
-        </h3>
-      </div>
-      <div class="item">
-        <h4>Curve Balance(Unclaimed)</h4>
-        <h3 class="right">{{ fbETH_Balance.unclaimedCrv }}</h3>
+        <h4>yVault PricePerShare</h4>
+        <h3 class="right">{{ fbETH_Balance.pricePerShare| number: "1.18-18" }}</h3>
       </div>
       <div class="item">
         <h4>Total Value:</h4>
