@@ -8,12 +8,10 @@ import {
   FarmBoss_USDC,
   SETH,
   WETH,
-  ECRV_GAUGE,
   FarmBoss_ETH,
   WBTC,
-  COMPOUND_WBTC,
   STACK_ETH,
-  HBTC_GAUGE,
+  HBTC_VAULT,
   FarmBoss_WBTC,
   FarmTreasury_USDC,
   FarmTreasury_ETH,
@@ -60,9 +58,8 @@ export class EthComponent {
 
   // wbtc reward contract
   wBTC: any;
-  compound_BTC: any;
   stack_ETH: any;
-  hCrvGauge: any;
+  hBTCVault: any;
 
   // accounts
   accounts = [];
@@ -107,12 +104,12 @@ export class EthComponent {
   };
   fbWBTC_Balance = {
     wBTC: 0,
-    compound_WBTC: 0,
     stack_ETH: 0,
     totalValue: 0,
-    unclaimedCrv: 0,
-    hCrvGauge: 0,
     crvVirtualPrice: 0,
+    hBTC: 0,
+    pricePerShare: 0,
+    totalAssets: 0,
   };
 
   ftUSDC_Balance = { usdc: 0, aum: 0 };
@@ -246,7 +243,7 @@ export class EthComponent {
       .call();
     this.fbETH_Balance.sETH = this.web3.utils.fromWei(sEthBalanceWei);
 
-    const totalSupplyWei = await this.sETH.methods.totalSupply().call();
+    const totalSupplyWei = await this.sETH.methods.totalAssets().call();
 
     this.fbETH_Balance.totalAssets = this.web3.utils.fromWei(totalSupplyWei);
 
@@ -273,33 +270,35 @@ export class EthComponent {
     this.fbWBTC_Balance.wBTC =
       this.web3.utils.fromWei(wBTCBalanceWei, 'gwei') * 10;
 
-    this.compound_BTC = new this.web3.eth.Contract(balanceABI, COMPOUND_WBTC);
-    const compoundWBTCBalanceWei = await this.compound_BTC.methods
-      .balanceOf(FarmBoss_WBTC)
-      .call();
-    this.fbWBTC_Balance.compound_WBTC =
-      this.web3.utils.fromWei(compoundWBTCBalanceWei, 'gwei') * 10;
-
     this.stack_ETH = new this.web3.eth.Contract(balanceABI, STACK_ETH);
     const stackETHBalanceWei = await this.stack_ETH.methods
       .balanceOf(FarmBoss_WBTC)
       .call();
     this.fbWBTC_Balance.stack_ETH = this.web3.utils.fromWei(stackETHBalanceWei);
 
-    this.hCrvGauge = new this.web3.eth.Contract(crvGauge, HBTC_GAUGE);
-    const hCrvGaugeInWei = await this.hCrvGauge.methods
+    this.hBTCVault = new this.web3.eth.Contract(yVaultABI, HBTC_VAULT);
+    const hBTCInWei = await this.hBTCVault.methods
       .balanceOf(FarmBoss_WBTC)
       .call();
-    this.fbWBTC_Balance.hCrvGauge = this.web3.utils.fromWei(hCrvGaugeInWei);
-    const unclaimedCrvWbtcWei = await this.hCrvGauge.methods
-      .claimable_tokens(FarmBoss_WBTC)
+    this.fbWBTC_Balance.hBTC = this.web3.utils.fromWei(hBTCInWei);
+
+    const yvHBTCTotalSupplyWei = await this.hBTCVault.methods
+      .totalAssets()
       .call();
-    this.fbWBTC_Balance.unclaimedCrv =
-      this.web3.utils.fromWei(unclaimedCrvWbtcWei);
+
+    this.fbWBTC_Balance.totalAssets =
+      this.web3.utils.fromWei(yvHBTCTotalSupplyWei);
+
+    const yvHBTCPricePerShareWei = await this.hBTCVault.methods
+      .pricePerShare()
+      .call();
+    this.fbWBTC_Balance.pricePerShare = this.web3.utils.fromWei(
+      yvHBTCPricePerShareWei
+    );
+
     this.fbWBTC_Balance.totalValue =
-      this.fbWBTC_Balance.compound_WBTC * this.compoundBTCPrice +
       this.fbWBTC_Balance.wBTC * this.wBTCPrice +
-      this.fbWBTC_Balance.hCrvGauge * this.wBTCPrice;
+      this.fbWBTC_Balance.hBTC * this.wBTCPrice;
 
     this.crvWBTCPool = new this.web3.eth.Contract(crvPool, CRV_WBTC_POOL);
     const wbtcVirtualPriceWei = await this.crvWBTCPool.methods
@@ -307,6 +306,7 @@ export class EthComponent {
       .call();
     this.fbWBTC_Balance.crvVirtualPrice =
       this.web3.utils.fromWei(wbtcVirtualPriceWei);
+
     // Get the FarmTreasuryUSDC's USDC balance
     const ftUSDCBalanceWei = await this.usdc.methods
       .balanceOf(FarmTreasury_USDC)
