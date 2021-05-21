@@ -251,16 +251,19 @@ export class EthComponent {
     this.fbETH_Balance.pricePerShare =
       this.web3.utils.fromWei(pricePerShareWei);
 
-    this.fbETH_Balance.totalValue =
-      this.fbETH_Balance.sETH * this.ethPrice +
-      this.fbETH_Balance.wETH * this.ethPrice;
-
     this.crvETHPool = new this.web3.eth.Contract(crvPool, CRV_ETH_POOL);
     const ethVirtualPriceWei = await this.crvETHPool.methods
       .get_virtual_price()
       .call();
     this.fbETH_Balance.crvVirtualPrice =
       this.web3.utils.fromWei(ethVirtualPriceWei);
+
+    this.fbETH_Balance.totalValue =
+      this.fbETH_Balance.sETH *
+        this.ethPrice *
+        this.fbETH_Balance.pricePerShare *
+        this.fbETH_Balance.crvVirtualPrice +
+      this.fbETH_Balance.wETH * this.ethPrice;
 
     // Get the balance of the FarmBossWBTC
     this.wBTC = new this.web3.eth.Contract(balanceABI, WBTC);
@@ -296,16 +299,19 @@ export class EthComponent {
       yvHBTCPricePerShareWei
     );
 
-    this.fbWBTC_Balance.totalValue =
-      this.fbWBTC_Balance.wBTC * this.wBTCPrice +
-      this.fbWBTC_Balance.hBTC * this.wBTCPrice;
-
     this.crvWBTCPool = new this.web3.eth.Contract(crvPool, CRV_WBTC_POOL);
     const wbtcVirtualPriceWei = await this.crvWBTCPool.methods
       .get_virtual_price()
       .call();
     this.fbWBTC_Balance.crvVirtualPrice =
       this.web3.utils.fromWei(wbtcVirtualPriceWei);
+
+    this.fbWBTC_Balance.totalValue =
+      this.fbWBTC_Balance.wBTC * this.wBTCPrice +
+      this.fbWBTC_Balance.hBTC *
+        this.wBTCPrice *
+        this.fbWBTC_Balance.pricePerShare *
+        this.fbWBTC_Balance.crvVirtualPrice;
 
     // Get the FarmTreasuryUSDC's USDC balance
     const ftUSDCBalanceWei = await this.usdc.methods
